@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2262%22 r=%2222%22 fill=%22%2300ff00%22/><circle cx=%2230%22 cy=%2238%22 r=%2210%22 fill=%22%2300ff00%22/><circle cx=%2250%22 cy=%2230%22 r=%2210%22 fill=%22%2300ff00%22/><circle cx=%2270%22 cy=%2238%22 r=%2210%22 fill=%22%2300ff00%22/></svg>">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">MeridiMeet / Global Fast Scheduler</title>
+    <style>
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: #000000;
+            color: #a3e635;
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-align: center;
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #888888;
+            margin-bottom: 25px;
+        }
+        .section {
+            background: #111111;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #00ff00;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .calendar-nav button {
+            background: #222222;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        .calendar-nav button:hover { background: #00ff00; color: #000; }
+        .month-title { font-weight: bold; color: #00ff00; font-size: 1.1rem; text-shadow: 0 0 5px rgba(0,255,0,0.5); }
+        
+        .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; color: #00ff00; margin-bottom: 5px; }
+        .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        
+        .day-btn {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            color: #ffffff;
+            padding: 12px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-align: center;
+            min-height: 44px;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+        .days-grid .day-btn:nth-child(7n+1) { color: #ff0055; }
+        .days-grid .day-btn:nth-child(7n) { color: #38bdf8; }
+        
+        .day-btn:disabled { color: #444444 !important; background: #050505; border: 1px solid #111111; cursor: default; }
+        .day-btn.empty { background: transparent !important; border: none !important; cursor: default !important; pointer-events: none; }
+        
+        .day-btn.selected {
+            background: #00ff00 !important;
+            color: #000000 !important;
+            font-weight: bold;
+            box-shadow: 0 0 12px rgba(0, 255, 0, 0.8);
+            border-color: #00ff00;
+        }
+        
+        input[type="text"], textarea, select {
+            width: 95%;
+            background: #000000;
+            border: 1px solid #00ff00;
+            color: #ffffff;
+            padding: 8px;
+            margin: 4px 0;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        textarea { resize: vertical; min-height: 50px; }
+        input[type="text"]:focus, textarea:focus, select:focus { outline: none; box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
+        
+        .add-btn {
+            background: #222222;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .add-btn:hover { background: #00ff00; color: #000000; }
+        
+        button.action-btn {
+            width: 100%;
+            background: #00ff00;
+            border: none;
+            color: #000000;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+            transition: all 0.2s;
+        }
+        button.action-btn:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.7);
+        }
+        
+        .slot-row { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; background: #222222; padding: 8px; border-radius: 4px; }
+        .radio-group button { background: #333333; border: 1px solid #444444; color: #fff; padding: 5px 12px; margin-left: 5px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.2s; }
+        .radio-group button.active-ok { background: #00ff00; color: #000; box-shadow: 0 0 8px rgba(0, 255, 0, 0.6); }
+        .radio-group button.active-maybe { background: #ffaa00; color: #000; box-shadow: 0 0 8px rgba(255, 170, 0, 0.6); }
+        .radio-group button.active-no { background: #ff0055; color: #000; box-shadow: 0 0 8px rgba(255, 0, 85, 0.6); }
+        
+        .summary-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #0a0a0a; font-size: 0.85rem; }
+        .summary-table th, .summary-table td { border: 1px solid #333333; padding: 10px; text-align: center; color: #ffffff; }
+        .summary-table th { background: #111111; color: #00ff00; vertical-align: top; }
+        .summary-table td.slot-axis { text-align: left; font-weight: bold; color: #a3e635; background: #111111; width: 40%; }
+        
+        .cell-ok { color: #00ff00 !important; font-weight: bold; background: rgba(0, 255, 0, 0.1); }
+        .cell-maybe { color: #ffaa00 !important; font-weight: bold; background: rgba(255, 170, 0, 0.1); }
+        .cell-no { color: #ff0055 !important; font-weight: bold; background: rgba(255, 0, 85, 0.1); }
+        .comment-text { font-size: 0.75rem; color: #888888; display: block; margin-top: 4px; font-weight: normal; border-top: 1px dashed #333; padding-top: 4px; }
+
+        .row-best { border: 2px solid #00ff00 !important; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3); }
+        .row-best td.slot-axis { color: #000000 !important; background: #00ff00 !important; text-shadow: none; }
+        .row-best td.slot-axis::after { content: " 👑 BEST"; font-size: 0.7rem; background: #000; color: #00ff00; padding: 1px 4px; border-radius: 3px; margin-left: 5px; font-weight: bold; }
+
+        .edit-link {
+            display: inline-block;
+            margin-top: 5px;
+            font-size: 0.7rem;
+            background: #333;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .edit-link:hover { background: #00ff00; color: #000; }
+
+        .timezone-notice { font-size: 0.8rem; color: #00ff00; margin-bottom: 10px; }
+        
+        .premium-ad-bar {
+            margin-top: 15px;
+            background: #111111;
+            border: 1px dashed #00ff00;
+            border-radius: 4px;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #ffffff;
+        }
+        .premium-ad-bar a {
+            color: #00ff00;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 1px solid #00ff00;
+            padding-bottom: 1px;
+        }
+        .premium-ad-bar a:hover { color: #ffffff; border-color: #ffffff; }
+        .ad-tag {
+            font-size: 0.65rem;
+            background: #222222;
+            color: #888888;
+            padding: 1px 4px;
+            border-radius: 3px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-box {
+            background: #111;
+            border: 2px solid #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        .modal-title {
+            color: #ff0055;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        .modal-title.success {
+            color: #00ff00;
+        }
+        .modal-body {
+            color: #ffffff;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        .modal-close-btn {
+            background: #00ff00;
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body>
+  
+    <h1 id="mainTitle">MeridiMeet</h1>
+    <div class="subtitle" id="mainSubtitle">Multi-Timezone Scheduler for Meetups, Gaming & Teams</div>
+    
+    <!-- 主催者作成画面 -->
+    <div id="creatorView">
+        <div class="section">
+            <strong id="lblEventName">1. Event Name</strong>
+            <input type="text" id="eventName" placeholder="e.g. Global Meetup / Worldwide Scrim">
+            <div class="timezone-notice" id="creatorTZ"></div>
+        </div>
+
+        <div class="section">
+            <strong id="lblSelectDates">2. Select Target Dates</strong>
+            <div class="calendar-nav">
+                <button type="button" onclick="changeMonth(-1)">◀ Prev</button>
+                <div class="month-title" id="monthDisplay">January 2026</div>
+                <button type="button" onclick="changeMonth(1)">Next ▶</button>
+            </div>
+            <div class="calendar-header" id="calendarHeaderRow">
+                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+            <div class="days-grid" id="calendarGrid"></div>
+        </div>
+
+<!-- 3. 時間枠セクション -->
+        <div class="section">
+            <strong id="lblEnterSlots">3. Enter Time Slots (24H Format)</strong>
+            <div id="timeSlots">
+                <input type="text" class="slot" placeholder="e.g. 12:00">
+                <input type="text" class="slot" placeholder="e.g. 15:00">
+                <input type="text" class="slot" placeholder="e.g. 21:00">
+            </div>
+            <button class="add-btn" id="btnAddSlot" onclick="addTimeSlot()">+ Add Slot</button>
+        </div>
+
+        <!-- 4. 説明セクション -->
+        <div class="section">
+            <strong id="lblDescription">4. Description (Optional)</strong>
+            <textarea id="eventDescription" placeholder="e.g. Discussing the Q2 project roadmap"></textarea>
+        </div>
+
+        <!-- ボタンは一番下 -->
+        <button class="action-btn" id="btnGenerate" onclick="generateLink()">Generate Cross-Border Link</button>
+    </div>
+
+    <!-- 参加者回答画面 -->
+    <div id="attendeeView" style="display: none;">
+        <div class="section">
+            <h2 id="displayEventName" style="color: #00ff00; margin-top: 0; margin-bottom: 5px;"></h2>
+            <div id="hostTZInfo" style="font-size:0.8rem; color:#888; margin-bottom: 15px;"></div>
+            
+            <p id="formActionTitle">Please enter your name and select your availability.</p>
+            <input type="text" id="attendeeName" placeholder="Your Name">
+            
+            <label style="font-size:0.85rem; color:#00ff00; display:block; margin-top:10px;">
+                🌐 <strong id="lblYourLocation">Your Location (Simulated Timezone for testing):</strong>
+                <select id="attendeeTZ" onchange="refreshAttendeeSlots()">
+                    <option value="Asia/Tokyo">Tokyo, Japan (JST / UTC+9)</option>
+                    <option value="Pacific/Honolulu">Honolulu, Hawaii (HST / UTC-10)</option>
+                    <option value="America/Los_Angeles">Los Angeles, USA (PST / UTC-8)</option>
+                    <option value="America/New_York">New York, USA (EST / UTC-5)</option>
+                    <option value="Europe/Madrid">Madrid, Spain (CEST / UTC+2)</option>
+                </select>
+            </label>
+        </div>
+        
+        <div class="section">
+            <strong id="lblSelectAvail">Select Availability (<span style="color:#00ff00;">Converted to Your Local Time</span>)</strong>
+            <div id="availabilityList"></div>
+        </div>
+
+        <div class="section">
+            <strong id="lblComment">Comment</strong>
+            <textarea id="attendeeComment" placeholder="e.g. Available anytime!"></textarea>
+        </div>
+        
+        <button class="action-btn" id="submitBtn" onclick="submitAttendance()">Submit Response</button>
+
+        <!-- 集計結果ボード -->
+        <div class="section" style="margin-top: 30px; border-color: #00ff00; overflow-x: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="color: #00ff00; text-shadow: 0 0 5px rgba(0,255,0,0.5);">📊 <span id="lblBoardTitle">Availability Board</span> (<span id="hostTZLabel">Host Time</span>)</strong>
+                <span id="responseCount" style="background:#222; color:#00ff00; border:1px solid #00ff00; padding:2px 8px; border-radius:20px; font-size:0.8rem; font-weight:bold;">0 responses</span>
+            </div>
+            <table class="summary-table" id="summaryTable">
+                <thead>
+                    <tr id="tableHeader">
+                        <th style="width: 40%;" id="thTimeSlot">Time Slot</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+            
+            <!-- プレミアム広告バー (メリスニへの完璧な誘導) -->
+            <div class="premium-ad-bar" id="adBar">
+                <span class="ad-tag">AD</span> Need faster chat? <a href="meridisnip.html" target="_blank">Try MeridiSnip</a> — 1-click text snippets for Discord & teams.
+            </div>
+        </div>
+    </div>
+
+    <!-- カスタム警告モーダル用HTML -->
+    <div class="modal-overlay" id="customAlertOverlay">
+        <div class="modal-box">
+            <div class="modal-title" id="alertTitle">WARNING</div>
+            <div class="modal-body" id="alertMsg">Something went wrong.</div>
+            <button class="modal-close-btn" onclick="closeCustomAlert()">OK</button>
+        </div>
+    </div>
+
+    <script>
+        // 💡 言語の自動判定とローカライズ処理
+        const userLang = navigator.language || navigator.userLanguage;
+        const isJapanese = userLang.startsWith('ja');
+
+        if (isJapanese) {
+            document.getElementById('pageTitle').innerText = "MeridiMeet - Schcedule Creator";
+            document.getElementById('mainSubtitle').innerText = "海外との会議・ゲーム・イベントの時差をゼロにするスケジュール調整ツール";
+            document.getElementById('lblEventName').innerText = "1. イベント名を入力";
+            document.getElementById('eventName').placeholder = "例: 国際ミーティング / 海外クラン戦";
+            document.getElementById('lblSelectDates').innerText = "2. 候補日を選択";
+            document.getElementById('calendarHeaderRow').innerHTML = '<div style="color:#ff0055;">日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div style="color:#38bdf8;">土</div>';
+            document.getElementById('lblEnterSlots').innerText = "3. 時間枠を入力 (24時間表記)";
+            document.getElementById('btnAddSlot').innerText = "+ 時間枠を追加";
+            document.getElementById('btnGenerate').innerText = "時差換算URLを発行する (クリップボードにコピー)";
+            
+            document.getElementById('formActionTitle').innerText = "名前を入力し、あなたの現地時間で空いている時間をタップしてください。";
+            document.getElementById('attendeeName').placeholder = "お名前";
+            document.getElementById('lblYourLocation').innerText = "あなたの現在の場所 (テスト用のシミュレーター):";
+            document.getElementById('lblSelectAvail').innerHTML = "出欠を選択 (<span style='color:#00ff00;'>あなたの現地時間に自動変換されています</span>)";
+            document.getElementById('lblComment').innerText = "コメント";
+            document.getElementById('attendeeComment').placeholder = "例: いつでもいけます！";
+            document.getElementById('submitBtn').innerText = "回答を送信する";
+            document.getElementById('lblBoardTitle').innerText = "出欠集計ボード";
+            document.getElementById('thTimeSlot').innerText = "時間枠";
+            document.getElementById('adBar').innerHTML = '<span class="ad-tag">PR</span> 定型文の入力を爆速に。 <a href="meridisnip.html" target="_blank">メリスニ（MeridiSnip）を使ってみる</a> — Discordやチャットに1クリックでテンプレを即座に呼び出し。';
+        }
+
+        const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        document.getElementById('creatorTZ').innerText = isJapanese ? `🌐 あなたのタイムゾーン: ${localZone}` : `🌐 Your detected timezone: ${localZone}`;
+
+        const selectedDates = new Set(); 
+        let currentCalendarDate = new Date(); 
+
+        const monthNamesEN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthNamesJP = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+
+        function showCustomAlert(msg, titleText = null, isSuccess = false) {
+            const overlay = document.getElementById('customAlertOverlay');
+            const title = document.getElementById('alertTitle');
+            const body = document.getElementById('alertMsg');
+            
+            title.innerText = titleText || (isJapanese ? "警告" : "WARNING");
+            if (isSuccess) {
+                title.className = "modal-title success";
+            } else {
+                title.className = "modal-title";
+            }
+            body.innerHTML = msg.replace(/\n/g, '<br>');
+            overlay.classList.add('active');
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('customAlertOverlay').classList.remove('active');
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const monthDisplay = document.getElementById('monthDisplay');
+            grid.innerHTML = "";
+
+            const year = currentCalendarDate.getFullYear();
+            const month = currentCalendarDate.getMonth();
+
+            monthDisplay.innerText = isJapanese ? `${year}年 ${monthNamesJP[month]}` : `${monthNamesEN[month]} ${year}`;
+
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyBtn = document.createElement('button');
+                emptyBtn.type = "button";
+                emptyBtn.className = 'day-btn empty';
+                grid.appendChild(emptyBtn);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const btn = document.createElement('button');
+                btn.type = "button";
+                btn.className = 'day-btn';
+                btn.innerText = day;
+
+                const thisDate = new Date(year, month, day);
+                const yyyy = thisDate.getFullYear();
+                const mm = String(thisDate.getMonth() + 1).padStart(2, '0');
+                const dd = String(thisDate.getDate()).padStart(2, '0');
+                const dateStr = `${yyyy}-${mm}-${dd}`;
+
+                const compareDate = new Date(year, month, day, 23, 59, 59);
+                if (compareDate < new Date()) {
+                    btn.disabled = true;
+                }
+
+                if (selectedDates.has(dateStr)) {
+                    btn.classList.add('selected');
+                }
+
+                btn.onclick = () => {
+                    btn.classList.toggle('selected');
+                    selectedDates.has(dateStr) ? selectedDates.delete(dateStr) : selectedDates.add(dateStr);
+                };
+
+                grid.appendChild(btn);
+            }
+        }
+
+        function changeMonth(direction) {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
+            renderCalendar();
+        }
+
+        renderCalendar();
+
+        function addTimeSlot() {
+            const container = document.getElementById('timeSlots');
+            const newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.className = 'slot';
+            newInput.placeholder = 'e.g. 23:00';
+            container.appendChild(newInput);
+        }
+
+        let decodedEventData = null;
+        let respondents = {}; 
+        let editingRespondentId = null; 
+
+        function generateLink() {
+            const name = document.getElementById('eventName').value.trim();
+            if(!name) return showCustomAlert(isJapanese ? "イベント名を入力してください。" : "Please enter an Event Name.");
+            if(selectedDates.size === 0) return showCustomAlert(isJapanese ? "日付を1つ以上選択してください。" : "Please select at least one date.");
+            
+            const rawSlots = Array.from(document.querySelectorAll('.slot')).map(input => input.value.trim());
+            const slots = [];
+            
+            for(let val of rawSlots) {
+                if(!val) continue;
+                // 💡 お助け救済機能: 「~」や「〜」を検知して自動消去
+                let cleanVal = val.replace(/[~〜]+$/, '').trim(); 
+                if(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(cleanVal)) {
+                    slots.push(cleanVal);
+                } else {
+                    return showCustomAlert(isJapanese ? `フォーマットが正しくありません: "${val}"\n21:00 の形式で入力してください。` : `Invalid format detected: "${val}"\nPlease enter a valid 24H time slot (e.g., 21:00).`);
+                }
+            }
+            
+            if(slots.length === 0) return showCustomAlert(isJapanese ? "時間枠を1つ以上入力してください。" : "Please enter at least one time slot.");
+
+            const description = document.getElementById('eventDescription').value.trim();
+            const sortedDates = Array.from(selectedDates).sort();
+            const utcTimestamps = [];
+            sortedDates.forEach(date => {
+                slots.forEach(slot => {
+                    const dateTimeStr = `${date}T${slot}:00`;
+                    utcTimestamps.push({ original: `${date} ${slot}`, utc: new Date(dateTimeStr).toISOString() });
+                });
+            });
+
+            const data = { name: name, description: description, creatorZone: localZone, timestamps: utcTimestamps };
+            const encodedData = btoa(encodeURIComponent(JSON.stringify(data)));
+            const finalURL = window.location.origin + window.location.pathname + "?event=" + encodedData;
+            
+            // Clipboard fallback as per rules
+            document.addEventListener('copy', function handler(e) {
+                e.clipboardData.setData('text/plain', finalURL);
+                e.preventDefault();
+                document.removeEventListener('copy', handler);
+            });
+            document.execCommand('copy');
+            
+            showCustomAlert(
+                isJapanese ? "URLをコピーしました！調整相手に送ってください。" : "SUCCESS!\nURL copied to clipboard.",
+                isJapanese ? "完了" : "SUCCESS",
+                true
+            );
+            
+            setTimeout(() => {
+                window.location.href = finalURL;
+            }, 1500);
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventDataParam = urlParams.get('event');
+
+        if(eventDataParam) {
+            document.getElementById('creatorView').style.display = 'none';
+            document.getElementById('attendeeView').removeAttribute('style');
+            
+            try {
+                decodedEventData = JSON.parse(decodeURIComponent(atob(eventDataParam)));
+                document.getElementById('displayEventName').innerText = decodedEventData.name;
+
+if (decodedEventData.description && decodedEventData.description.trim() !== "") {
+                    const descDisplay = document.createElement('p');
+                    descDisplay.style.fontSize = "0.9rem";
+                    descDisplay.style.color = "#888888";
+                    descDisplay.style.marginTop = "5px";
+                    descDisplay.style.marginBottom = "20px";
+                    descDisplay.style.fontStyle = "italic";
+                    descDisplay.innerText = decodedEventData.description;
+                    document.getElementById('displayEventName').after(descDisplay);
+                }
+                document.getElementById('hostTZInfo').innerText = isJapanese ? `🌎 主催者のタイムゾーン: ${decodedEventData.creatorZone}` : `🌎 Created by Host in Timezone: ${decodedEventData.creatorZone}`;
+                document.getElementById('hostTZLabel').innerText = isJapanese ? `主催者時間: ${decodedEventData.creatorZone}` : `Host Time: ${decodedEventData.creatorZone}`;
+
+                refreshAttendeeSlots();
+                updateBoard();
+
+            } catch(e) {
+                console.error(e);
+                showCustomAlert("Invalid Event URL.");
+            }
+        }
+
+        function refreshAttendeeSlots() {
+            const targetZone = document.getElementById('attendeeTZ').value;
+            const listContainer = document.getElementById('availabilityList');
+            listContainer.innerHTML = "";
+
+            decodedEventData.timestamps.forEach(ts => {
+                const utcDate = new Date(ts.utc);
+                const localString = utcDate.toLocaleString('ja-JP', {
+                    timeZone: targetZone,
+                    month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false
+                });
+
+                const row = document.createElement('div');
+                row.className = 'slot-row';
+                row.innerHTML = `
+                    <span>${localString}</span>
+                    <div class="radio-group" data-utc="${ts.utc}">
+                        <button type="button" onclick="selectStatus(this, 'ok')">〇</button>
+                        <button type="button" onclick="selectStatus(this, 'maybe')">△</button>
+                        <button type="button" onclick="selectStatus(this, 'no')">×</button>
+                    </div>
+                `;
+                listContainer.appendChild(row);
+            });
+        }
+
+        function selectStatus(btn, status) {
+            const group = btn.parentElement;
+            Array.from(group.children).forEach(b => b.className = '');
+            if(status === 'ok') btn.className = 'active-ok';
+            if(status === 'maybe') btn.className = 'active-maybe';
+            if(status === 'no') btn.className = 'active-no';
+            group.setAttribute('data-value', status);
+        }
+
+        function submitAttendance() {
+            const name = document.getElementById('attendeeName').value.trim();
+            const comment = document.getElementById('attendeeComment').value.trim();
+            const currentAttendeeTZ = document.getElementById('attendeeTZ').value;
+            if(!name) return showCustomAlert(isJapanese ? "名前を入力してください。" : "Please enter your name.");
+
+            const currentAnswers = {};
+            decodedEventData.timestamps.forEach(ts => {
+                const group = document.querySelector(`.radio-group[data-utc="${ts.utc}"]`);
+                const val = group ? group.getAttribute('data-value') : null;
+                currentAnswers[ts.utc] = val;
+            });
+
+            if (editingRespondentId) {
+                respondents[editingRespondentId] = {
+                    name: name,
+                    tz: currentAttendeeTZ,
+                    comment: comment,
+                    answers: currentAnswers
+                };
+                showCustomAlert(isJapanese ? `${name}さんの回答を更新しました！` : `Updated response for ${name}!`, isJapanese ? "成功" : "SUCCESS", true);
+                editingRespondentId = null;
+                document.getElementById('formActionTitle').innerText = isJapanese ? "名前を入力し、あなたの現地時間で空いている時間をタップしてください。" : "Please enter your name and select your availability.";
+                document.getElementById('submitBtn').innerText = isJapanese ? "回答を送信する" : "Submit Response";
+                document.getElementById('attendeeName').removeAttribute('disabled');
+            } else {
+                const newId = "user_" + Date.now();
+                respondents[newId] = {
+                    name: name,
+                    tz: currentAttendeeTZ,
+                    comment: comment,
+                    answers: currentAnswers
+                };
+                showCustomAlert(isJapanese ? `回答ありがとうございます、${name}さん！` : `Thank you, ${name}!\nYour response has been added.`, isJapanese ? "成功" : "SUCCESS", true);
+            }
+
+            document.getElementById('attendeeName').value = '';
+            document.getElementById('attendeeComment').value = '';
+            document.querySelectorAll('.radio-group button').forEach(b => b.className = '');
+            document.querySelectorAll('.radio-group').forEach(g => g.removeAttribute('data-value'));
+
+            updateBoard();
+        }
+
+        function startEdit(id) {
+            const data = respondents[id];
+            if (!data) return;
+
+            editingRespondentId = id;
+            document.getElementById('formActionTitle').innerHTML = isJapanese ? `🚨 <strong>回答編集中のユーザー: ${data.name}</strong>` : `🚨 <strong>Editing Response for: ${data.name}</strong>`;
+            document.getElementById('submitBtn').innerText = isJapanese ? "変更を保存してボードを更新" : "Save & Update Board";
+            
+            document.getElementById('attendeeName').value = data.name;
+            document.getElementById('attendeeName').setAttribute('disabled', 'true'); 
+            document.getElementById('attendeeComment').value = data.comment;
+            document.getElementById('attendeeTZ').value = data.tz;
+
+            refreshAttendeeSlots();
+
+            for (let utc in data.answers) {
+                const group = document.querySelector(`.radio-group[data-utc="${utc}"]`);
+                if (group) {
+                    const val = data.answers[utc];
+                    if (val) {
+                        const btn = group.querySelector(`button[onclick*="'${val}'"]`);
+                        if (btn) selectStatus(btn, val);
+                    }
+                }
+            }
+            
+            document.getElementById('attendeeView').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateBoard() {
+            const respCount = Object.keys(respondents).length;
+            document.getElementById('responseCount').innerText = isJapanese ? `${respCount} 人が回答中` : `${respCount} response${respCount !== 1 ? 's' : ''}`;
+
+            const header = document.getElementById('tableHeader');
+            header.innerHTML = `<th style="width: 40%;">${isJapanese ? '時間枠' : 'Time Slot'}</th>`;
+            
+            for (let id in respondents) {
+                const u = respondents[id];
+                const th = document.createElement('th');
+                th.innerHTML = `
+                    ${u.name}<br>
+                    <span style='font-size:0.7rem;color:#00ff00;'>(${u.tz.split('/')[1]})</span>
+                    ${u.comment ? `<span class="comment-text">💬 ${u.comment}</span>` : ''}
+                    <span class="edit-link" onclick="startEdit('${id}')">⚙️ ${isJapanese ? '編集' : 'Edit'}</span>
+                `;
+                header.appendChild(th);
+            }
+
+            const tBody = document.getElementById('tableBody');
+            tBody.innerHTML = "";
+
+            let slotScores = {};
+            let maxScore = -1;
+
+            decodedEventData.timestamps.forEach(ts => {
+                slotScores[ts.utc] = 0;
+                for (let id in respondents) {
+                    const val = respondents[id].answers[ts.utc];
+                    if (val === 'ok') slotScores[ts.utc] += 2;
+                    if (val === 'maybe') slotScores[ts.utc] += 1;
+                }
+                if (slotScores[ts.utc] > maxScore && respCount > 0) {
+                    maxScore = slotScores[ts.utc];
+                }
+            });
+
+            // 👑 すべての同点1位を王冠にする A案の完璧なハイライト処理
+            decodedEventData.timestamps.forEach(ts => {
+                const hostDate = new Date(ts.utc);
+                const hostString = hostDate.toLocaleString('ja-JP', {
+                    timeZone: decodedEventData.creatorZone,
+                    month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false
+                });
+
+                const tr = document.createElement('tr');
+                tr.id = "row-" + btoa(ts.utc).replace(/=/g, "");
+                tr.innerHTML = `<td class="slot-axis">${hostString}</td>`;
+
+                for (let id in respondents) {
+                    const val = respondents[id].answers[ts.utc];
+                    const td = document.createElement('td');
+                    if (val === 'ok') { td.innerText = '〇'; td.className = 'cell-ok'; }
+                    else if (val === 'maybe') { td.innerText = '△'; td.className = 'cell-maybe'; }
+                    else if (val === 'no') { td.innerText = '×'; td.className = 'cell-no'; }
+                    else { td.innerText = 'ー'; }
+                    tr.appendChild(td);
+                }
+
+                if (maxScore > 0 && slotScores[ts.utc] === maxScore) {
+                    tr.classList.add('row-best');
+                }
+
+                tBody.appendChild(tr);
+            });
+        }
+
+// 💡 言語切り替え・テーマ切り替え用のファンクション追加
+
+function toggleLanguage() {
+    // 現在の言語判定を反転、またはlocalStorageに保存して切り替え
+    const currentIsJa = document.getElementById('pageTitle').innerText.includes("MeridiMeet - Schcedule Creator") === false;
+    // シンプルにページをリロードせずに切り替えるか、フラグを切り替えて再レンダリングする構造にします
+    // 今回は簡易的に、現在の状態をトグルしてリロードする実装が確実です
+    const newLangState = !isJapanese;
+    // ブラウザの言語設定を一時的に上書きする代わりに、HTMLのテキスト要素を動的に書き換える関数を定義できます
+    // 実装の容易さのため、ページ全体で利用できるグローバルな切り替え処理を行います
+}
+
+    </script>
+</body>
+</html>
