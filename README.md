@@ -66,11 +66,16 @@ MeridiMeet is part of **[meridistore](https://github.com/meridi-support)** — i
 
 ---
 
-## 💬 Feedback & Community
+  ## 💬 Feedback & Community
 
-Got ideas? Found a bug? Just want to say hi?
+  We'd love to hear how you're using MeridiMeet!
 
-👉 **[Join the Discussion → meridi-square Discussions](https://github.com/meridi-support/meridi-square/discussions)**
+  - 🌍 [Tell us how you use it](https://github.com/meridi-support/meridi-square/discussions/3)
+  - 💡 Feature requests & ideas? [Start a discussion](https://github.com/meridi-support/meridi-square/discussions)
+  - 🐛 Found a bug? [Open an issue](https://github.com/meridi-support/meridi-square/issues)
+
+  Every voice — big or small — is welcome.
+  日本語でもお気軽にどうぞ！ 🐟
 
 ---
 
