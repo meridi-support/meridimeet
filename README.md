@@ -63,7 +63,8 @@ MeridiMeet is part of **[meridistore](https://github.com/meridi-support)** — i
 |------|-------------|-------|
 | 🌐 **MeridiMeet** | Multi-Timezone Scheduler | Free |
 | 📝 **[MeridiSync](https://github.com/meridi-support/meridi-square)** | Resident Text Snippet Expander | [BOOTH ¥1,000](https://meridistore.booth.pm/) / [Gumroad $8](https://meridius4.gumroad.com/) |
-| 🪄 **MeridiLingo** | Language | $3 / ¥500 | [Gumroad ($3)](https://meridius4.gumroad.com/l/meridilingo) / [BOOTH (¥500)](https://meridistore.booth.pm/items/8992102) |
+| 🪄 **[MeridiLingo](https://github.com/meridi-support/meridi-lingo)** | Learn English Through Pop Culture | [BOOTH ¥500](https://meridistore.booth.pm/items/8992102) / [Gumroad $3](https://meridius4.gumroad.com/l/meridilingo) |
+
 
 ---
 
