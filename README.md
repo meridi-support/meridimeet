@@ -1,3 +1,6 @@
+<p align="center">
+  <img src="MeridiMeet.jpg" alt="MeridiMeet" width="100%">
+</p>
 
 # 🌐 MeridiMeet — Multi-Timezone Scheduler
 
