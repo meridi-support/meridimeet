@@ -584,19 +584,32 @@
             });
         }
 
+        // Firebase 版: URL パラメータ処理
         const urlParams = new URLSearchParams(window.location.search);
-        const eventDataParam = urlParams.get('event');
+        const eventId = urlParams.get('id');
+        // v1 互換: 旧 Base64 URL もサポート
+        const legacyEventParam = urlParams.get('event');
 
-        if(eventDataParam) {
+        let currentEventId = null;
+
+        if (eventId) {
+            // v2: Firebase からイベントデータを取得
+            currentEventId = eventId;
             document.getElementById('creatorView').style.display = 'none';
             document.getElementById('attendeeView').removeAttribute('style');
-            
-            try {
-                decodedEventData = JSON.parse(decodeURIComponent(atob(eventDataParam)));
+
+            db.ref('events/' + eventId).once('value').then(function(snapshot) {
+                var data = snapshot.val();
+                if (!data) {
+                    showCustomAlert(isJapanese ? "イベントが見つかりません。URLを確認してください。" : "Event not found. Please check the URL.");
+                    return;
+                }
+
+                decodedEventData = data;
                 document.getElementById('displayEventName').innerText = decodedEventData.name;
 
-if (decodedEventData.description && decodedEventData.description.trim() !== "") {
-                    const descDisplay = document.createElement('p');
+                if (decodedEventData.description && decodedEventData.description.trim() !== "") {
+                    var descDisplay = document.createElement('p');
                     descDisplay.style.fontSize = "0.9rem";
                     descDisplay.style.color = "#888888";
                     descDisplay.style.marginTop = "5px";
@@ -605,8 +618,43 @@ if (decodedEventData.description && decodedEventData.description.trim() !== "") 
                     descDisplay.innerText = decodedEventData.description;
                     document.getElementById('displayEventName').after(descDisplay);
                 }
-                document.getElementById('hostTZInfo').innerText = isJapanese ? `🌎 主催者のタイムゾーン: ${decodedEventData.creatorZone}` : `🌎 Created by Host in Timezone: ${decodedEventData.creatorZone}`;
-                document.getElementById('hostTZLabel').innerText = isJapanese ? `主催者時間: ${decodedEventData.creatorZone}` : `Host Time: ${decodedEventData.creatorZone}`;
+                document.getElementById('hostTZInfo').innerText = isJapanese ? '🌎 主催者のタイムゾーン: ' + decodedEventData.creatorZone : '🌎 Created by Host in Timezone: ' + decodedEventData.creatorZone;
+                document.getElementById('hostTZLabel').innerText = isJapanese ? '主催者時間: ' + decodedEventData.creatorZone : 'Host Time: ' + decodedEventData.creatorZone;
+
+                refreshAttendeeSlots();
+
+                // リアルタイムリスナー: 回答が追加・更新されるたびに自動で集計更新
+                db.ref('responses/' + eventId).on('value', function(respSnapshot) {
+                    respondents = respSnapshot.val() || {};
+                    updateBoard();
+                });
+
+            }).catch(function(error) {
+                console.error("Firebase read error:", error);
+                showCustomAlert(isJapanese ? "データの読み込みに失敗しました。" : "Failed to load event data.");
+            });
+
+        } else if (legacyEventParam) {
+            // v1 互換: 旧 Base64 URL をサポート
+            document.getElementById('creatorView').style.display = 'none';
+            document.getElementById('attendeeView').removeAttribute('style');
+
+            try {
+                decodedEventData = JSON.parse(decodeURIComponent(atob(legacyEventParam)));
+                document.getElementById('displayEventName').innerText = decodedEventData.name;
+
+                if (decodedEventData.description && decodedEventData.description.trim() !== "") {
+                    var descDisplay2 = document.createElement('p');
+                    descDisplay2.style.fontSize = "0.9rem";
+                    descDisplay2.style.color = "#888888";
+                    descDisplay2.style.marginTop = "5px";
+                    descDisplay2.style.marginBottom = "20px";
+                    descDisplay2.style.fontStyle = "italic";
+                    descDisplay2.innerText = decodedEventData.description;
+                    document.getElementById('displayEventName').after(descDisplay2);
+                }
+                document.getElementById('hostTZInfo').innerText = isJapanese ? '🌎 主催者のタイムゾーン: ' + decodedEventData.creatorZone : '🌎 Created by Host in Timezone: ' + decodedEventData.creatorZone;
+                document.getElementById('hostTZLabel').innerText = isJapanese ? '主催者時間: ' + decodedEventData.creatorZone : 'Host Time: ' + decodedEventData.creatorZone;
 
                 refreshAttendeeSlots();
                 updateBoard();
@@ -618,29 +666,108 @@ if (decodedEventData.description && decodedEventData.description.trim() !== "") 
         }
 
         function refreshAttendeeSlots() {
-            const targetZone = document.getElementById('attendeeTZ').value;
-            const listContainer = document.getElementById('availabilityList');
+            var targetZone = document.getElementById('attendeeTZ').value;
+            var listContainer = document.getElementById('availabilityList');
             listContainer.innerHTML = "";
 
-            decodedEventData.timestamps.forEach(ts => {
-                const utcDate = new Date(ts.utc);
-                const localString = utcDate.toLocaleString('ja-JP', {
+            decodedEventData.timestamps.forEach(function(ts) {
+                var utcDate = new Date(ts.utc);
+                var localString = utcDate.toLocaleString('ja-JP', {
                     timeZone: targetZone,
                     month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false
                 });
 
-                const row = document.createElement('div');
+                var row = document.createElement('div');
                 row.className = 'slot-row';
-                row.innerHTML = `
-                    <span>${localString}</span>
-                    <div class="radio-group" data-utc="${ts.utc}">
-                        <button type="button" onclick="selectStatus(this, 'ok')">〇</button>
-                        <button type="button" onclick="selectStatus(this, 'maybe')">△</button>
-                        <button type="button" onclick="selectStatus(this, 'no')">×</button>
-                    </div>
-                `;
+                row.innerHTML = '<span>' + localString + '</span>' +
+                    '<div class="radio-group" data-utc="' + ts.utc + '">' +
+                    '<button type="button" onclick="selectStatus(this, \'ok\')">〇</button>' +
+                    '<button type="button" onclick="selectStatus(this, \'maybe\')">△</button>' +
+                    '<button type="button" onclick="selectStatus(this, \'no\')">×</button>' +
+                    '</div>';
                 listContainer.appendChild(row);
             });
+        }
+
+        function selectStatus(btn, status) {
+            var group = btn.parentElement;
+            Array.from(group.children).forEach(function(b) { b.className = ''; });
+            if(status === 'ok') btn.className = 'active-ok';
+            if(status === 'maybe') btn.className = 'active-maybe';
+            if(status === 'no') btn.className = 'active-no';
+            group.setAttribute('data-value', status);
+        }
+
+        function submitAttendance() {
+            var name = document.getElementById('attendeeName').value.trim();
+            var comment = document.getElementById('attendeeComment').value.trim();
+            var currentAttendeeTZ = document.getElementById('attendeeTZ').value;
+            if(!name) return showCustomAlert(isJapanese ? "名前を入力してください。" : "Please enter your name.");
+
+            var currentAnswers = {};
+            decodedEventData.timestamps.forEach(function(ts) {
+                var group = document.querySelector('.radio-group[data-utc="' + ts.utc + '"]');
+                var val = group ? group.getAttribute('data-value') : null;
+                currentAnswers[ts.utc] = val;
+            });
+
+            var responseData = {
+                name: name,
+                tz: currentAttendeeTZ,
+                comment: comment,
+                answers: currentAnswers
+            };
+
+            if (currentEventId) {
+                // v2: Firebase に回答を保存
+                var refPath;
+                if (editingRespondentId) {
+                    refPath = db.ref('responses/' + currentEventId + '/' + editingRespondentId);
+                } else {
+                    refPath = db.ref('responses/' + currentEventId).push();
+                }
+
+                refPath.set(responseData).then(function() {
+                    if (editingRespondentId) {
+                        showCustomAlert(isJapanese ? name + 'さんの回答を更新しました！' : 'Updated response for ' + name + '!', isJapanese ? "成功" : "SUCCESS", true);
+                        editingRespondentId = null;
+                        document.getElementById('formActionTitle').innerText = isJapanese ? "名前を入力し、あなたの現地時間で空いている時間をタップしてください。" : "Please enter your name and select your availability.";
+                        document.getElementById('submitBtn').innerText = isJapanese ? "回答を送信する" : "Submit Response";
+                        document.getElementById('attendeeName').removeAttribute('disabled');
+                    } else {
+                        showCustomAlert(isJapanese ? '回答ありがとうございます、' + name + 'さん！' : 'Thank you, ' + name + '!\nYour response has been added.', isJapanese ? "成功" : "SUCCESS", true);
+                    }
+
+                    document.getElementById('attendeeName').value = '';
+                    document.getElementById('attendeeComment').value = '';
+                    document.querySelectorAll('.radio-group button').forEach(function(b) { b.className = ''; });
+                    document.querySelectorAll('.radio-group').forEach(function(g) { g.removeAttribute('data-value'); });
+                }).catch(function(error) {
+                    console.error("Firebase write error:", error);
+                    showCustomAlert(isJapanese ? "送信に失敗しました。もう一度お試しください。" : "Failed to submit. Please try again.");
+                });
+
+            } else {
+                // v1 互換: ローカル保存（旧 Base64 URL の場合）
+                if (editingRespondentId) {
+                    respondents[editingRespondentId] = responseData;
+                    showCustomAlert(isJapanese ? name + 'さんの回答を更新しました！' : 'Updated response for ' + name + '!', isJapanese ? "成功" : "SUCCESS", true);
+                    editingRespondentId = null;
+                    document.getElementById('formActionTitle').innerText = isJapanese ? "名前を入力し、あなたの現地時間で空いている時間をタップしてください。" : "Please enter your name and select your availability.";
+                    document.getElementById('submitBtn').innerText = isJapanese ? "回答を送信する" : "Submit Response";
+                    document.getElementById('attendeeName').removeAttribute('disabled');
+                } else {
+                    var newId = "user_" + Date.now();
+                    respondents[newId] = responseData;
+                    showCustomAlert(isJapanese ? '回答ありがとうございます、' + name + 'さん！' : 'Thank you, ' + name + '!\nYour response has been added.', isJapanese ? "成功" : "SUCCESS", true);
+                }
+
+                document.getElementById('attendeeName').value = '';
+                document.getElementById('attendeeComment').value = '';
+                document.querySelectorAll('.radio-group button').forEach(function(b) { b.className = ''; });
+                document.querySelectorAll('.radio-group').forEach(function(g) { g.removeAttribute('data-value'); });
+                updateBoard();
+            }
         }
 
         function selectStatus(btn, status) {
