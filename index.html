@@ -396,7 +396,7 @@
                     decodedEventData = data;
                     document.getElementById('creatorView').style.display = 'none';
                     document.getElementById('attendeeView').style.display = 'block';
-                    document.getElementById('subtitleText').textContent = data.name + '\n' + (data.description || '');
+                    document.getElementById('subtitleText').textContent = data.name;
                     document.getElementById('timezoneNotice').innerHTML = '🌎 ' +
                         (isJapanese ? '主催者のタイムゾーン: ' : "Organizer's timezone: ") +
                         data.creatorZone +
@@ -425,7 +425,7 @@
                 decodedEventData = JSON.parse(decodeURIComponent(eventDataParam));
                 document.getElementById('creatorView').style.display = 'none';
                 document.getElementById('attendeeView').style.display = 'block';
-                document.getElementById('subtitleText').textContent = decodedEventData.name + '\n' + (decodedEventData.description || '');
+                document.getElementById('subtitleText').textContent = decodedEventData.name;
                 var zone = decodedEventData.creatorZone || 'UTC';
                 document.getElementById('timezoneNotice').innerHTML = '🌎 ' +
                     (isJapanese ? '主催者のタイムゾーン: ' : "Organizer's timezone: ") + zone +
