@@ -60,6 +60,19 @@
         .modal-title.success { color: #00ff00; }
         .modal-body { color: #ffffff; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4; }
         .modal-close-btn { background: #00ff00; color: #000; font-weight: bold; border: none; padding: 8px 24px; border-radius: 4px; cursor: pointer; }
+.version-clickable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+.version-clickable:hover{color:#00ff41;}
+.changelog-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;justify-content:center;align-items:center;}
+.changelog-overlay.active{display:flex;}
+.changelog-box{background:#1a1a2e;border:1px solid #00ff41;border-radius:12px;padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;color:#e0e0e0;font-size:0.85rem;line-height:1.6;}
+.changelog-box h2{color:#00ff41;margin-top:0;font-size:1.1rem;}
+.changelog-box h3{color:#00ff41;margin:16px 0 6px;font-size:0.95rem;}
+.changelog-box ul{padding-left:20px;margin:4px 0;}
+.changelog-box li{margin:2px 0;}
+.changelog-box hr{border:none;border-top:1px solid #333;margin:16px 0;}
+.changelog-close{position:absolute;top:12px;right:18px;color:#888;font-size:1.5rem;cursor:pointer;background:none;border:none;}
+.changelog-close:hover{background:#00ff41;color:#1a1a2e;}
+
     </style>
 
     <!-- Firebase SDK (CDN) -->
@@ -177,6 +190,7 @@
 
     <!-- Footer -->
     <div class="premium-ad-bar">
+        MeridiMeet <span class="version-clickable" onclick="document.getElementById('changelogOverlay').classList.add('active');">v2.0.0</span> |
         <span class="ad-tag">▲ Presented by</span> |
         📖 <a href="https://meridi-support.github.io/meridilingo/" target="_blank">MeridiLingo</a> ·
         💻 <a href="https://meridi-support.github.io/meridisync/" target="_blank">MeridiSync</a> ·
@@ -604,6 +618,28 @@
 
         renderCalendar();
     </script>
+
+<div class="changelog-overlay" id="changelogOverlay" onclick="if(event.target===this)this.classList.remove('active');">
+  <div class="changelog-box" style="position:relative;">
+    <button class="changelog-close" onclick="document.getElementById('changelogOverlay').classList.remove('active');">&times;</button>
+    <h2>📜 CHANGELOG</h2>
+    <h3>🔥 v2.0.0 — 2026-11-01</h3>
+    <ul>
+      <li>Firebase Realtime Database integration</li>
+      <li>Live response sync across all participants</li>
+      <li>Short URL sharing (?id=xxx)</li>
+      <li>Tied scores show multiple 👑</li>
+      <li>Category selection with custom option</li>
+    </ul>
+    <hr>
+    <h3>🌱 v1.0.0 — 2026-09-10</h3>
+    <ul>
+      <li>Initial release (URL-encoded data sharing)</li>
+      <li>Cross-timezone scheduling</li>
+      <li>○△✕ response system with 👑 best time</li>
+    </ul>
+  </div>
+</div>
 
     <script data-goatcounter="https://meridibrand.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
