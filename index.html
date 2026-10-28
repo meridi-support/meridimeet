@@ -244,6 +244,25 @@
         }
 
     </style>
+
+    <!-- Firebase SDK (CDN) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script>
+        // Firebase 初期化
+        const firebaseConfig = {
+            apiKey: "AIzaSyCzTo4sik6PCIHfR-PCb0DuOTLrd3oO_3k",
+            authDomain: "meridimeet.firebaseapp.com",
+            databaseURL: "https://meridimeet-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "meridimeet",
+            storageBucket: "meridimeet.firebasestorage.app",
+            messagingSenderId: "254458169537",
+            appId: "1:254458169537:web:0c6d863c2501a655b4ac40"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+    </script>
+
 </head>
 <body>
   
@@ -509,7 +528,6 @@
             
             for(let val of rawSlots) {
                 if(!val) continue;
-                // 💡 お助け救済機能: 「~」や「〜」を検知して自動消去
                 let cleanVal = val.replace(/[~〜]+$/, '').trim(); 
                 if(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(cleanVal)) {
                     slots.push(cleanVal);
@@ -530,27 +548,40 @@
                 });
             });
 
-            const data = { name: name, description: description, creatorZone: localZone, timestamps: utcTimestamps };
-            const encodedData = btoa(encodeURIComponent(JSON.stringify(data)));
-            const finalURL = window.location.origin + window.location.pathname + "?event=" + encodedData;
-            
-            // Clipboard fallback as per rules
-            document.addEventListener('copy', function handler(e) {
-                e.clipboardData.setData('text/plain', finalURL);
-                e.preventDefault();
-                document.removeEventListener('copy', handler);
+            const data = { name: name, description: description, creatorZone: localZone, timestamps: utcTimestamps, createdAt: new Date().toISOString() };
+
+            // Firebase にイベントを保存 → 短い ID を生成
+            const newEventRef = db.ref('events').push();
+            const eventId = newEventRef.key;
+
+            newEventRef.set(data).then(() => {
+                const finalURL = window.location.origin + window.location.pathname + "?id=" + eventId;
+                
+                // クリップボードにコピー
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(finalURL).catch(() => {});
+                } else {
+                    const ta = document.createElement('textarea');
+                    ta.value = finalURL;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                }
+                
+                showCustomAlert(
+                    isJapanese ? "URLをコピーしました！調整相手に送ってください。" : "SUCCESS!\nURL copied to clipboard.",
+                    isJapanese ? "完了" : "SUCCESS",
+                    true
+                );
+                
+                setTimeout(() => {
+                    window.location.href = finalURL;
+                }, 1500);
+            }).catch((error) => {
+                console.error("Firebase write error:", error);
+                showCustomAlert(isJapanese ? "エラーが発生しました。もう一度お試しください。" : "An error occurred. Please try again.");
             });
-            document.execCommand('copy');
-            
-            showCustomAlert(
-                isJapanese ? "URLをコピーしました！調整相手に送ってください。" : "SUCCESS!\nURL copied to clipboard.",
-                isJapanese ? "完了" : "SUCCESS",
-                true
-            );
-            
-            setTimeout(() => {
-                window.location.href = finalURL;
-            }, 1500);
         }
 
         const urlParams = new URLSearchParams(window.location.search);
