@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,251 +7,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">MeridiMeet / Global Fast Scheduler</title>
     <style>
-
-        body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            background: #000000;
-            color: #a3e635;
-            max-width: 750px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            text-align: center;
-            color: #00ff00;
-            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-            margin-bottom: 5px;
-        }
-        .subtitle {
-            text-align: center;
-            font-size: 0.85rem;
-            color: #888888;
-            margin-bottom: 25px;
-        }
-        .section {
-            background: #111111;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            border: 1px solid #00ff00;
-        }
-        
-        .calendar-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-        .calendar-nav button {
-            background: #222222;
-            border: 1px solid #00ff00;
-            color: #00ff00;
-            padding: 5px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
+        body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; background: #000000; color: #a3e635; max-width: 750px; margin: 40px auto; padding: 20px; }
+        h1 { font-size: 1.8rem; text-align: center; color: #00ff00; text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); margin-bottom: 5px; }
+        .subtitle { text-align: center; font-size: 0.85rem; color: #888888; margin-bottom: 25px; }
+        .section { background: #111111; padding: 15px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #00ff00; }
+        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .calendar-nav button { background: #222222; border: 1px solid #00ff00; color: #00ff00; padding: 5px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.2s; }
         .calendar-nav button:hover { background: #00ff00; color: #000; }
         .month-title { font-weight: bold; color: #00ff00; font-size: 1.1rem; text-shadow: 0 0 5px rgba(0,255,0,0.5); }
-        
         .calendar-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; font-size: 0.8rem; color: #00ff00; margin-bottom: 5px; }
         .days-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
-        
-        .day-btn {
-            background: #1a1a1a;
-            border: 1px solid #333333;
-            color: #ffffff;
-            padding: 12px 0;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            text-align: center;
-            min-height: 44px;
-            box-sizing: border-box;
-            transition: all 0.2s;
-        }
+        .day-btn { background: #1a1a1a; border: 1px solid #333333; color: #ffffff; padding: 12px 0; border-radius: 4px; cursor: pointer; font-size: 0.9rem; text-align: center; min-height: 44px; box-sizing: border-box; transition: all 0.2s; }
         .days-grid .day-btn:nth-child(7n+1) { color: #ff0055; }
         .days-grid .day-btn:nth-child(7n) { color: #38bdf8; }
-        
         .day-btn:disabled { color: #444444 !important; background: #050505; border: 1px solid #111111; cursor: default; }
         .day-btn.empty { background: transparent !important; border: none !important; cursor: default !important; pointer-events: none; }
-        
-        .day-btn.selected {
-            background: #00ff00 !important;
-            color: #000000 !important;
-            font-weight: bold;
-            box-shadow: 0 0 12px rgba(0, 255, 0, 0.8);
-            border-color: #00ff00;
-        }
-        
-        input[type="text"], textarea, select {
-            width: 95%;
-            background: #000000;
-            border: 1px solid #00ff00;
-            color: #ffffff;
-            padding: 8px;
-            margin: 4px 0;
-            border-radius: 4px;
-            font-family: inherit;
-        }
+        .day-btn.selected { background: #00ff00 !important; color: #000000 !important; font-weight: bold; box-shadow: 0 0 12px rgba(0, 255, 0, 0.8); border-color: #00ff00; }
+        input[type="text"], textarea, select { width: 95%; background: #000000; border: 1px solid #00ff00; color: #ffffff; padding: 8px; margin: 4px 0; border-radius: 4px; font-family: inherit; }
         textarea { resize: vertical; min-height: 50px; }
         input[type="text"]:focus, textarea:focus, select:focus { outline: none; box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); }
-        
-        .add-btn {
-            background: #222222;
-            border: 1px solid #00ff00;
-            color: #00ff00;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            margin-top: 5px;
-        }
+        .add-btn { background: #222222; border: 1px solid #00ff00; color: #00ff00; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; margin-top: 5px; }
         .add-btn:hover { background: #00ff00; color: #000000; }
-        
-        button.action-btn {
-            width: 100%;
-            background: #00ff00;
-            border: none;
-            color: #000000;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
-            transition: all 0.2s;
-        }
-        button.action-btn:hover {
-            box-shadow: 0 0 25px rgba(0, 255, 0, 0.7);
-        }
-        
+        button.action-btn { width: 100%; background: #00ff00; border: none; color: #000000; padding: 12px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 0 15px rgba(0, 255, 0, 0.4); transition: all 0.2s; }
+        button.action-btn:hover { box-shadow: 0 0 25px rgba(0, 255, 0, 0.7); }
         .slot-row { display: flex; justify-content: space-between; align-items: center; margin: 8px 0; background: #222222; padding: 8px; border-radius: 4px; }
         .radio-group button { background: #333333; border: 1px solid #444444; color: #fff; padding: 5px 12px; margin-left: 5px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.2s; }
         .radio-group button.active-ok { background: #00ff00; color: #000; box-shadow: 0 0 8px rgba(0, 255, 0, 0.6); }
         .radio-group button.active-maybe { background: #ffaa00; color: #000; box-shadow: 0 0 8px rgba(255, 170, 0, 0.6); }
         .radio-group button.active-no { background: #ff0055; color: #000; box-shadow: 0 0 8px rgba(255, 0, 85, 0.6); }
-        
         .summary-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: #0a0a0a; font-size: 0.85rem; }
         .summary-table th, .summary-table td { border: 1px solid #333333; padding: 10px; text-align: center; color: #ffffff; }
         .summary-table th { background: #111111; color: #00ff00; vertical-align: top; }
         .summary-table td.slot-axis { text-align: left; font-weight: bold; color: #a3e635; background: #111111; width: 40%; }
-        
         .cell-ok { color: #00ff00 !important; font-weight: bold; background: rgba(0, 255, 0, 0.1); }
         .cell-maybe { color: #ffaa00 !important; font-weight: bold; background: rgba(255, 170, 0, 0.1); }
         .cell-no { color: #ff0055 !important; font-weight: bold; background: rgba(255, 0, 85, 0.1); }
         .comment-text { font-size: 0.75rem; color: #888888; display: block; margin-top: 4px; font-weight: normal; border-top: 1px dashed #333; padding-top: 4px; }
-
         .row-best { border: 2px solid #00ff00 !important; box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3); }
         .row-best td.slot-axis { color: #000000 !important; background: #00ff00 !important; text-shadow: none; }
         .row-best td.slot-axis::after { content: " 👑 BEST"; font-size: 0.7rem; background: #000; color: #00ff00; padding: 1px 4px; border-radius: 3px; margin-left: 5px; font-weight: bold; }
-
-        .edit-link {
-            display: inline-block;
-            margin-top: 5px;
-            font-size: 0.7rem;
-            background: #333;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 2px 6px;
-            border-radius: 3px;
-            cursor: pointer;
-        }
+        .edit-link { display: inline-block; margin-top: 5px; font-size: 0.7rem; background: #333; color: #00ff00; border: 1px solid #00ff00; padding: 2px 6px; border-radius: 3px; cursor: pointer; }
         .edit-link:hover { background: #00ff00; color: #000; }
-
         .timezone-notice { font-size: 0.8rem; color: #00ff00; margin-bottom: 10px; }
-        
-        .premium-ad-bar {
-            margin-top: 15px;
-            background: #111111;
-            border: 1px dashed #00ff00;
-            border-radius: 4px;
-            padding: 12px;
-            text-align: center;
-            font-size: 0.85rem;
-            color: #ffffff;
-        }
-        .premium-ad-bar a {
-            color: #00ff00;
-            text-decoration: none;
-            font-weight: bold;
-            border-bottom: 1px solid #00ff00;
-            padding-bottom: 1px;
-        }
+        .premium-ad-bar { margin-top: 15px; background: #111111; border: 1px dashed #00ff00; border-radius: 4px; padding: 12px; text-align: center; font-size: 0.85rem; color: #ffffff; }
+        .premium-ad-bar a { color: #00ff00; text-decoration: none; font-weight: bold; border-bottom: 1px solid #00ff00; padding-bottom: 1px; }
         .premium-ad-bar a:hover { color: #ffffff; border-color: #ffffff; }
-        .ad-tag {
-            font-size: 0.65rem;
-            background: #222222;
-            color: #888888;
-            padding: 1px 4px;
-            border-radius: 3px;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.25s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal-box {
-            background: #111;
-            border: 2px solid #00ff00;
-            padding: 20px;
-            border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-        }
-        .modal-title {
-            color: #ff0055;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-        .modal-title.success {
-            color: #00ff00;
-        }
-        .modal-body {
-            color: #ffffff;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-        .modal-close-btn {
-            background: #00ff00;
-            color: #000;
-            font-weight: bold;
-            border: none;
-            padding: 8px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
+        .ad-tag { font-size: 0.65rem; background: #222222; color: #888888; padding: 1px 4px; border-radius: 3px; margin-right: 8px; vertical-align: middle; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; z-index: 10000; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-box { background: #111; border: 2px solid #00ff00; padding: 20px; border-radius: 8px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0, 255, 0, 0.3); }
+        .modal-title { color: #ff0055; font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
+        .modal-title.success { color: #00ff00; }
+        .modal-body { color: #ffffff; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4; }
+        .modal-close-btn { background: #00ff00; color: #000; font-weight: bold; border: none; padding: 8px 24px; border-radius: 4px; cursor: pointer; }
     </style>
 
     <!-- Firebase SDK (CDN) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script>
-        // Firebase 初期化
-        const firebaseConfig = {
+        var firebaseConfig = {
             apiKey: "AIzaSyCzTo4sik6PCIHfR-PCb0DuOTLrd3oO_3k",
             authDomain: "meridimeet.firebaseapp.com",
             databaseURL: "https://meridimeet-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -260,681 +76,513 @@
             appId: "1:254458169537:web:0c6d863c2501a655b4ac40"
         };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        var db = firebase.database();
     </script>
-
 </head>
+
+
 <body>
-  
-    <h1 id="mainTitle">MeridiMeet</h1>
-    <div class="subtitle" id="mainSubtitle">Multi-Timezone Scheduler for Meetups, Gaming & Teams</div>
-    
+
+    <h1>MeridiMeet</h1>
+    <div class="subtitle" id="subtitleText">海外との会議・ゲーム・イベントの時差をゼロにするスケジュール調整ツール</div>
+
     <!-- 主催者作成画面 -->
     <div id="creatorView">
         <div class="section">
-            <strong id="lblEventName">1. Event Name</strong>
-            <input type="text" id="eventName" placeholder="e.g. Global Meetup / Worldwide Scrim">
-            <div class="timezone-notice" id="creatorTZ"></div>
+            <label>📝 Event Name / イベント名:</label>
+            <input type="text" id="eventName" placeholder="e.g. Team Sync / チーム定例">
         </div>
-
         <div class="section">
-            <strong id="lblSelectDates">2. Select Target Dates</strong>
+            <label>📝 Description / 説明:</label>
+            <textarea id="eventDescription" placeholder="e.g. Weekly standup / 週次ミーティング"></textarea>
+        </div>
+        <div class="section">
+            <label>📅 Select Dates / 日付を選択:</label>
             <div class="calendar-nav">
-                <button type="button" onclick="changeMonth(-1)">◀ Prev</button>
-                <div class="month-title" id="monthDisplay">January 2026</div>
-                <button type="button" onclick="changeMonth(1)">Next ▶</button>
+                <button onclick="changeMonth(-1)">&lt;</button>
+                <span class="month-title" id="monthTitle"></span>
+                <button onclick="changeMonth(1)">&gt;</button>
             </div>
-            <div class="calendar-header" id="calendarHeaderRow">
-                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-            </div>
+            <div class="calendar-header" id="calendarHeader"></div>
             <div class="days-grid" id="calendarGrid"></div>
         </div>
-
-<!-- 3. 時間枠セクション -->
+        <div class="section" id="timeSlotsSection" style="display:none;">
+            <label>⏰ Time Slots / 時間帯:</label>
+            <div id="timeSlotList"></div>
+            <button class="add-btn" onclick="addTimeSlot()">+ Add Time Slot / 時間帯を追加</button>
+        </div>
         <div class="section">
-            <strong id="lblEnterSlots">3. Enter Time Slots (24H Format)</strong>
-            <div id="timeSlots">
-                <input type="text" class="slot" placeholder="e.g. 12:00">
-                <input type="text" class="slot" placeholder="e.g. 15:00">
-                <input type="text" class="slot" placeholder="e.g. 21:00">
+            <label>🌐 Category / カテゴリ:</label>
+            <select id="eventCategory">
+                <optgroup label="Business / ビジネス">
+                    <option value="Team Meeting">Team Meeting / チーム会議</option>
+                    <option value="Client Call">Client Call / クライアント通話</option>
+                    <option value="Workshop">Workshop / ワークショップ</option>
+                    <option value="1-on-1">1-on-1 / 個別面談</option>
+                </optgroup>
+                <optgroup label="Social / ソーシャル">
+                    <option value="Party">Party / パーティー</option>
+                    <option value="Reunion">Reunion / 同窓会</option>
+                    <option value="Hangout">Hangout / 集まり</option>
+                </optgroup>
+                <optgroup label="Gaming / ゲーム">
+                    <option value="Raid">Raid / レイド</option>
+                    <option value="Tournament">Tournament / トーナメント</option>
+                    <option value="Casual Play">Casual Play / カジュアルプレイ</option>
+                </optgroup>
+                <optgroup label="Sports / スポーツ">
+                    <option value="Futsal">Futsal / フットサル</option>
+                    <option value="Running">Running / ランニング</option>
+                    <option value="Gym">Gym / ジム</option>
+                </optgroup>
+                <optgroup label="Other / その他">
+                    <option value="Study Groups">Study Groups / 勉強会</option>
+                    <option value="Gaming & Teams">Gaming & Teams / ゲーム＆チーム</option>
+                </optgroup>
+            </select>
+        </div>
+        <button class="action-btn" onclick="generateLink()">時差換算URLを発行する (クリップボードにコピー)</button>
+    </div>
+
+    <!-- 回答者画面 -->
+    <div id="attendeeView" style="display:none;">
+        <div class="section">
+            <div class="timezone-notice" id="timezoneNotice"></div>
+            <label>👤 Your Name / あなたの名前:</label>
+            <input type="text" id="attendeeName" placeholder="e.g. Taro / 太郎">
+            <label style="margin-top:8px;display:block;">💬 Comment / コメント (optional):</label>
+            <textarea id="attendeeComment" placeholder="e.g. I might be 5 min late / 5分遅れるかも"></textarea>
+            <div id="attendeeSlots"></div>
+            <button class="action-btn" onclick="submitAttendance()">回答を送信する</button>
+        </div>
+        <div class="section">
+            <h3 style="color:#00ff00;">📊 出欠集計ボード (<span id="boardTimezoneLabel"></span>)</h3>
+            <div id="respondentCount" style="font-size:0.85rem;color:#888;margin-bottom:10px;"></div>
+            <div style="overflow-x:auto;">
+                <table class="summary-table" id="summaryTable"></table>
             </div>
-            <button class="add-btn" id="btnAddSlot" onclick="addTimeSlot()">+ Add Slot</button>
-        </div>
-
-        <!-- 4. 説明セクション -->
-        <div class="section">
-            <strong id="lblDescription">4. Description (Optional)</strong>
-            <textarea id="eventDescription" placeholder="e.g. Discussing the Q2 project roadmap"></textarea>
-        </div>
-
-        <!-- ボタンは一番下 -->
-        <button class="action-btn" id="btnGenerate" onclick="generateLink()">Generate Cross-Border Link</button>
-        <!-- meridistore footer (creator view) -->
-        <div class="premium-ad-bar" style="margin-top: 15px;">
-            🐟 Built with ❤️ by <a href="https://github.com/meridi-support" target="_blank">meridistore</a>
-            &nbsp;·&nbsp;
-            💬 <a href="https://github.com/meridi-support/meridi-square/discussions" target="_blank">Feedback</a>
-            &nbsp;·&nbsp;
-            🛒 <a href="https://meridius4.gumroad.com/" target="_blank">Gumroad</a> | <a href="https://meridistore.booth.pm/" target="_blank">BOOTH</a>
-            &nbsp;·&nbsp;
-            ☕ <a href="https://buymeacoffee.com/meridius" target="_blank">Support</a>
         </div>
     </div>
 
-    <!-- 参加者回答画面 -->
-    <div id="attendeeView" style="display: none;">
-        <div class="section">
-            <h2 id="displayEventName" style="color: #00ff00; margin-top: 0; margin-bottom: 5px;"></h2>
-            <div id="hostTZInfo" style="font-size:0.8rem; color:#888; margin-bottom: 15px;"></div>
-            
-            <p id="formActionTitle">Please enter your name and select your availability.</p>
-            <input type="text" id="attendeeName" placeholder="Your Name">
-            
-            <label style="font-size:0.85rem; color:#00ff00; display:block; margin-top:10px;">
-                🌐 <strong id="lblYourLocation">Your Location (Simulated Timezone for testing):</strong>
-                <select id="attendeeTZ" onchange="refreshAttendeeSlots()">
-                    <option value="Asia/Tokyo">Tokyo, Japan (JST / UTC+9)</option>
-                    <option value="Pacific/Honolulu">Honolulu, Hawaii (HST / UTC-10)</option>
-                    <option value="America/Los_Angeles">Los Angeles, USA (PST / UTC-8)</option>
-                    <option value="America/New_York">New York, USA (EST / UTC-5)</option>
-                    <option value="Europe/Madrid">Madrid, Spain (CEST / UTC+2)</option>
-                </select>
-            </label>
-        </div>
-        
-        <div class="section">
-            <strong id="lblSelectAvail">Select Availability (<span style="color:#00ff00;">Converted to Your Local Time</span>)</strong>
-            <div id="availabilityList"></div>
-        </div>
-
-        <div class="section">
-            <strong id="lblComment">Comment</strong>
-            <textarea id="attendeeComment" placeholder="e.g. Available anytime!"></textarea>
-        </div>
-        
-        <button class="action-btn" id="submitBtn" onclick="submitAttendance()">Submit Response</button>
-
-        <!-- 集計結果ボード -->
-        <div class="section" style="margin-top: 30px; border-color: #00ff00; overflow-x: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <strong style="color: #00ff00; text-shadow: 0 0 5px rgba(0,255,0,0.5);">📊 <span id="lblBoardTitle">Availability Board</span> (<span id="hostTZLabel">Host Time</span>)</strong>
-                <span id="responseCount" style="background:#222; color:#00ff00; border:1px solid #00ff00; padding:2px 8px; border-radius:20px; font-size:0.8rem; font-weight:bold;">0 responses</span>
-            </div>
-            <table class="summary-table" id="summaryTable">
-                <thead>
-                    <tr id="tableHeader">
-                        <th style="width: 40%;" id="thTimeSlot">Time Slot</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody"></tbody>
-            </table>
-            
-            
-<!-- meridistore footer -->
-<div class="premium-ad-bar" id="adBar">
-    🐟 Built with ❤️ by <a href="https://github.com/meridi-support" target="_blank">meridistore</a>
-    &nbsp;·&nbsp;
-    💬 <a href="https://github.com/meridi-support/meridi-square/discussions" target="_blank">Feedback</a>
-    &nbsp;·&nbsp;
-    🛒 <a href="https://meridius4.gumroad.com/" target="_blank">Gumroad</a> | <a href="https://meridistore.booth.pm/" target="_blank">BOOTH</a>
-    &nbsp;·&nbsp;
-    ☕ <a href="https://buymeacoffee.com/meridius" target="_blank">Support</a>
-</div>
-        </div>
-    </div>
-
-    <!-- カスタム警告モーダル用HTML -->
-    <div class="modal-overlay" id="customAlertOverlay">
+    <!-- Custom Alert Modal -->
+    <div class="modal-overlay" id="customModal">
         <div class="modal-box">
-            <div class="modal-title" id="alertTitle">WARNING</div>
-            <div class="modal-body" id="alertMsg">Something went wrong.</div>
+            <div class="modal-title" id="modalTitle">Notice</div>
+            <div class="modal-body" id="modalBody"></div>
             <button class="modal-close-btn" onclick="closeCustomAlert()">OK</button>
         </div>
     </div>
 
+    <!-- Footer -->
+    <div class="premium-ad-bar">
+        <span class="ad-tag">▲ Presented by</span> |
+        📖 <a href="https://meridi-support.github.io/meridilingo/" target="_blank">MeridiLingo</a> ·
+        💻 <a href="https://meridi-support.github.io/meridisync/" target="_blank">MeridiSync</a> ·
+        🐱 <a href="https://github.com/meridi-support" target="_blank">GitHub</a> ·
+        💬 <a href="https://github.com/meridi-support/meridimeet/discussions" target="_blank">フィードバック</a> ·
+        🛒 <a href="https://meridius4.gumroad.com" target="_blank">Gumroad</a> | <a href="https://meridistore.booth.pm" target="_blank">BOOTH</a> ·
+        ☕ <a href="https://buymeacoffee.com/meridius4" target="_blank">サポート</a>
+    </div>
+
+
     <script>
-        // 💡 言語の自動判定とローカライズ処理
-        const userLang = navigator.language || navigator.userLanguage;
-        const isJapanese = userLang.startsWith('ja');
+        var isJapanese = (navigator.language || navigator.userLanguage || '').startsWith('ja');
+        var selectedDates = [];
+        var currentMonth = new Date().getMonth();
+        var currentYear = new Date().getFullYear();
+        var decodedEventData = null;
+        var respondents = {};
+        var editingRespondentId = null;
+        var currentEventId = null;
 
-        if (isJapanese) {
-            document.getElementById('pageTitle').innerText = "MeridiMeet - Schcedule Creator";
-            document.getElementById('mainSubtitle').innerText = "海外との会議・ゲーム・イベントの時差をゼロにするスケジュール調整ツール";
-            document.getElementById('lblEventName').innerText = "1. イベント名を入力";
-            document.getElementById('eventName').placeholder = "例: 国際ミーティング / 海外クラン戦";
-            document.getElementById('lblSelectDates').innerText = "2. 候補日を選択";
-            document.getElementById('calendarHeaderRow').innerHTML = '<div style="color:#ff0055;">日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div style="color:#38bdf8;">土</div>';
-            document.getElementById('lblEnterSlots').innerText = "3. 時間枠を入力 (24時間表記)";
-            document.getElementById('btnAddSlot').innerText = "+ 時間枠を追加";
-            document.getElementById('btnGenerate').innerText = "時差換算URLを発行する (クリップボードにコピー)";
-            
-            document.getElementById('formActionTitle').innerText = "名前を入力し、あなたの現地時間で空いている時間をタップしてください。";
-            document.getElementById('attendeeName').placeholder = "お名前";
-            document.getElementById('lblYourLocation').innerText = "あなたの現在の場所 (テスト用のシミュレーター):";
-            document.getElementById('lblSelectAvail').innerHTML = "出欠を選択 (<span style='color:#00ff00;'>あなたの現地時間に自動変換されています</span>)";
-            document.getElementById('lblComment').innerText = "コメント";
-            document.getElementById('attendeeComment').placeholder = "例: いつでもいけます！";
-            document.getElementById('submitBtn').innerText = "回答を送信する";
-            document.getElementById('lblBoardTitle').innerText = "出欠集計ボード";
-            document.getElementById('thTimeSlot').innerText = "時間枠";
-            document.getElementById('adBar').innerHTML = '🐟 Built with ❤️ by <a href="https://github.com/meridi-support" target="_blank">meridistore</a> &nbsp;·&nbsp; 💬 <a href="https://github.com/meridi-support/meridi-square/discussions" target="_blank">フィードバック</a> &nbsp;·&nbsp; 🛒 <a href="https://meridius4.gumroad.com/" target="_blank">Gumroad</a> | <a href="https://meridistore.booth.pm/" target="_blank">BOOTH</a> &nbsp;·&nbsp; ☕ <a href="https://buymeacoffee.com/meridius" target="_blank">サポート</a>';
+        function showCustomAlert(title, message, isSuccess) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalTitle').className = isSuccess ? 'modal-title success' : 'modal-title';
+            document.getElementById('modalBody').innerHTML = message;
+            document.getElementById('customModal').classList.add('active');
         }
-
-        const localZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        document.getElementById('creatorTZ').innerText = isJapanese ? `🌐 あなたのタイムゾーン: ${localZone}` : `🌐 Your detected timezone: ${localZone}`;
-
-        const selectedDates = new Set(); 
-        let currentCalendarDate = new Date(); 
-
-        const monthNamesEN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        const monthNamesJP = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
-
-        function showCustomAlert(msg, titleText = null, isSuccess = false) {
-            const overlay = document.getElementById('customAlertOverlay');
-            const title = document.getElementById('alertTitle');
-            const body = document.getElementById('alertMsg');
-            
-            title.innerText = titleText || (isJapanese ? "警告" : "WARNING");
-            if (isSuccess) {
-                title.className = "modal-title success";
-            } else {
-                title.className = "modal-title";
-            }
-            body.innerHTML = msg.replace(/\n/g, '<br>');
-            overlay.classList.add('active');
-        }
-
         function closeCustomAlert() {
-            document.getElementById('customAlertOverlay').classList.remove('active');
+            document.getElementById('customModal').classList.remove('active');
         }
 
         function renderCalendar() {
-            const grid = document.getElementById('calendarGrid');
-            const monthDisplay = document.getElementById('monthDisplay');
-            grid.innerHTML = "";
-
-            const year = currentCalendarDate.getFullYear();
-            const month = currentCalendarDate.getMonth();
-
-            monthDisplay.innerText = isJapanese ? `${year}年 ${monthNamesJP[month]}` : `${monthNamesEN[month]} ${year}`;
-
-            const firstDayIndex = new Date(year, month, 1).getDay();
-            const totalDays = new Date(year, month + 1, 0).getDate();
-
-            for (let i = 0; i < firstDayIndex; i++) {
-                const emptyBtn = document.createElement('button');
-                emptyBtn.type = "button";
+            var months = isJapanese
+                ? ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
+                : ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            var days = isJapanese ? ['月','火','水','木','金','土','日'] : ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+            document.getElementById('monthTitle').textContent = months[currentMonth] + ' ' + currentYear;
+            var headerEl = document.getElementById('calendarHeader');
+            headerEl.innerHTML = '';
+            days.forEach(function(d) {
+                var span = document.createElement('span');
+                span.textContent = d;
+                headerEl.appendChild(span);
+            });
+            var grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            var firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            var adjusted = (firstDay === 0) ? 6 : firstDay - 1;
+            var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            for (var i = 0; i < adjusted; i++) {
+                var emptyBtn = document.createElement('button');
                 emptyBtn.className = 'day-btn empty';
+                emptyBtn.disabled = true;
                 grid.appendChild(emptyBtn);
             }
-
-            for (let day = 1; day <= totalDays; day++) {
-                const btn = document.createElement('button');
-                btn.type = "button";
+            for (var d = 1; d <= daysInMonth; d++) {
+                var btn = document.createElement('button');
                 btn.className = 'day-btn';
-                btn.innerText = day;
-
-                const thisDate = new Date(year, month, day);
-                const yyyy = thisDate.getFullYear();
-                const mm = String(thisDate.getMonth() + 1).padStart(2, '0');
-                const dd = String(thisDate.getDate()).padStart(2, '0');
-                const dateStr = `${yyyy}-${mm}-${dd}`;
-
-                const compareDate = new Date(year, month, day, 23, 59, 59);
-                if (compareDate < new Date()) {
+                btn.textContent = d;
+                var dateObj = new Date(currentYear, currentMonth, d);
+                var dateStr = currentYear + '-' + String(currentMonth + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+                if (dateObj < today) {
                     btn.disabled = true;
+                } else {
+                    btn.setAttribute('data-date', dateStr);
+                    if (selectedDates.indexOf(dateStr) !== -1) btn.classList.add('selected');
+                    btn.onclick = function () {
+                        var ds = this.getAttribute('data-date');
+                        var idx = selectedDates.indexOf(ds);
+                        if (idx === -1) { selectedDates.push(ds); this.classList.add('selected'); }
+                        else { selectedDates.splice(idx, 1); this.classList.remove('selected'); }
+                        selectedDates.sort();
+                        renderTimeSlots();
+                    };
                 }
-
-                if (selectedDates.has(dateStr)) {
-                    btn.classList.add('selected');
-                }
-
-                btn.onclick = () => {
-                    btn.classList.toggle('selected');
-                    selectedDates.has(dateStr) ? selectedDates.delete(dateStr) : selectedDates.add(dateStr);
-                };
-
                 grid.appendChild(btn);
             }
         }
+        function changeMonth(dir) { currentMonth += dir; if (currentMonth > 11) { currentMonth = 0; currentYear++; } if (currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(); }
 
-        function changeMonth(direction) {
-            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + direction);
-            renderCalendar();
+        function renderTimeSlots() {
+            var section = document.getElementById('timeSlotsSection');
+            var list = document.getElementById('timeSlotList');
+            if (selectedDates.length === 0) { section.style.display = 'none'; return; }
+            section.style.display = 'block';
+            if (list.children.length === 0) addTimeSlot();
         }
-
-        renderCalendar();
-
         function addTimeSlot() {
-            const container = document.getElementById('timeSlots');
-            const newInput = document.createElement('input');
-            newInput.type = 'text';
-            newInput.className = 'slot';
-            newInput.placeholder = 'e.g. 23:00';
-            container.appendChild(newInput);
-        }
-
-        let decodedEventData = null;
-        let respondents = {}; 
-        let editingRespondentId = null; 
-
-        function generateLink() {
-            const name = document.getElementById('eventName').value.trim();
-            if(!name) return showCustomAlert(isJapanese ? "イベント名を入力してください。" : "Please enter an Event Name.");
-            if(selectedDates.size === 0) return showCustomAlert(isJapanese ? "日付を1つ以上選択してください。" : "Please select at least one date.");
-            
-            const rawSlots = Array.from(document.querySelectorAll('.slot')).map(input => input.value.trim());
-            const slots = [];
-            
-            for(let val of rawSlots) {
-                if(!val) continue;
-                let cleanVal = val.replace(/[~〜]+$/, '').trim(); 
-                if(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(cleanVal)) {
-                    slots.push(cleanVal);
-                } else {
-                    return showCustomAlert(isJapanese ? `フォーマットが正しくありません: "${val}"\n21:00 の形式で入力してください。` : `Invalid format detected: "${val}"\nPlease enter a valid 24H time slot (e.g., 21:00).`);
+            var list = document.getElementById('timeSlotList');
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;gap:8px;align-items:center;margin:5px 0;';
+            var sel = document.createElement('select');
+            sel.style.cssText = 'flex:1;background:#000;border:1px solid #00ff00;color:#fff;padding:6px;border-radius:4px;';
+            for (var h = 0; h < 24; h++) {
+                for (var m = 0; m < 60; m += 30) {
+                    var opt = document.createElement('option');
+                    opt.value = String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+                    opt.textContent = opt.value;
+                    sel.appendChild(opt);
                 }
             }
-            
-            if(slots.length === 0) return showCustomAlert(isJapanese ? "時間枠を1つ以上入力してください。" : "Please enter at least one time slot.");
+            var removeBtn = document.createElement('button');
+            removeBtn.textContent = '✕';
+            removeBtn.className = 'add-btn';
+            removeBtn.onclick = function () { row.remove(); };
+            row.appendChild(sel);
+            row.appendChild(removeBtn);
+            list.appendChild(row);
+        }
 
-            const description = document.getElementById('eventDescription').value.trim();
-            const sortedDates = Array.from(selectedDates).sort();
-            const utcTimestamps = [];
-            sortedDates.forEach(date => {
-                slots.forEach(slot => {
-                    const dateTimeStr = `${date}T${slot}:00`;
-                    utcTimestamps.push({ original: `${date} ${slot}`, utc: new Date(dateTimeStr).toISOString() });
+        function getLocalTimezone() {
+            try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (e) { return 'UTC'; }
+        }
+
+        function generateLink() {
+            var name = document.getElementById('eventName').value.trim();
+            var description = document.getElementById('eventDescription').value.trim();
+            var localZone = getLocalTimezone();
+            if (!name) {
+                showCustomAlert(
+                    isJapanese ? "入力エラー" : "Input Error",
+                    isJapanese ? "イベント名を入力してください。" : "Please enter an event name.",
+                    false
+                );
+                return;
+            }
+            if (selectedDates.length === 0) {
+                showCustomAlert(
+                    isJapanese ? "入力エラー" : "Input Error",
+                    isJapanese ? "少なくとも1つの日付を選択してください。" : "Please select at least one date.",
+                    false
+                );
+                return;
+            }
+            var timeSlotSelects = document.querySelectorAll('#timeSlotList select');
+            var times = [];
+            timeSlotSelects.forEach(function(s) { times.push(s.value); });
+            if (times.length === 0) times.push('20:00');
+            var timestamps = [];
+            selectedDates.forEach(function(date) {
+                times.forEach(function(time) {
+                    var localStr = date + ' ' + time;
+                    var parts = localStr.split(/[- :]/);
+                    var localDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]), parseInt(parts[3]), parseInt(parts[4]));
+                    timestamps.push({ original: localStr, utc: localDate.toISOString() });
                 });
             });
 
-            const data = { name: name, description: description, creatorZone: localZone, timestamps: utcTimestamps, createdAt: new Date().toISOString() };
+            var data = { name: name, description: description, creatorZone: localZone, timestamps: timestamps };
 
             // Firebase にイベントを保存 → 短い ID を生成
-            const newEventRef = db.ref('events').push();
-            const eventId = newEventRef.key;
+            var newEventRef = db.ref('events').push();
+            var eventId = newEventRef.key;
+            newEventRef.set(data).then(function() {
+                var baseURL = window.location.href.split('?')[0];
+                var finalURL = baseURL + '?id=' + eventId;
 
-            newEventRef.set(data).then(() => {
-                const finalURL = window.location.origin + window.location.pathname + "?id=" + eventId;
-                
                 // クリップボードにコピー
                 if (navigator.clipboard && navigator.clipboard.writeText) {
-                    navigator.clipboard.writeText(finalURL).catch(() => {});
+                    navigator.clipboard.writeText(finalURL).then(function() {
+                        showCustomAlert(
+                            isJapanese ? "成功" : "SUCCESS",
+                            isJapanese ? "URLをコピーしました！調整相手に送ってください。" : "URL copied! Share it with your group.",
+                            true
+                        );
+                    });
                 } else {
-                    const ta = document.createElement('textarea');
-                    ta.value = finalURL;
-                    document.body.appendChild(ta);
-                    ta.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(ta);
+                    showCustomAlert(
+                        isJapanese ? "成功" : "SUCCESS",
+                        (isJapanese ? "以下のURLを共有してください:\n" : "Share this URL:\n") + finalURL,
+                        true
+                    );
                 }
-                
-                showCustomAlert(
-                    isJapanese ? "URLをコピーしました！調整相手に送ってください。" : "SUCCESS!\nURL copied to clipboard.",
-                    isJapanese ? "完了" : "SUCCESS",
-                    true
-                );
-                
-                setTimeout(() => {
+
+                setTimeout(function() {
                     window.location.href = finalURL;
                 }, 1500);
-            }).catch((error) => {
-                console.error("Firebase write error:", error);
-                showCustomAlert(isJapanese ? "エラーが発生しました。もう一度お試しください。" : "An error occurred. Please try again.");
+            }).catch(function(err) {
+                showCustomAlert("Error", "Firebase save failed: " + err.message, false);
             });
         }
 
         // Firebase 版: URL パラメータ処理
-        const urlParams = new URLSearchParams(window.location.search);
-        const eventId = urlParams.get('id');
-        // v1 互換: 旧 Base64 URL もサポート
-        const legacyEventParam = urlParams.get('event');
+        var urlParams = new URLSearchParams(window.location.search);
+        var eventIdParam = urlParams.get('id');
+        var eventDataParam = urlParams.get('event');
 
-        let currentEventId = null;
-
-        if (eventId) {
-            // v2: Firebase からイベントデータを取得
-            currentEventId = eventId;
-            document.getElementById('creatorView').style.display = 'none';
-            document.getElementById('attendeeView').removeAttribute('style');
-
-            db.ref('events/' + eventId).once('value').then(function(snapshot) {
+        if (eventIdParam) {
+            // v2: Firebase から読み込み
+            currentEventId = eventIdParam;
+            db.ref('events/' + eventIdParam).once('value').then(function(snapshot) {
                 var data = snapshot.val();
-                if (!data) {
-                    showCustomAlert(isJapanese ? "イベントが見つかりません。URLを確認してください。" : "Event not found. Please check the URL.");
-                    return;
+                if (data) {
+                    decodedEventData = data;
+                    document.getElementById('creatorView').style.display = 'none';
+                    document.getElementById('attendeeView').style.display = 'block';
+                    document.getElementById('subtitleText').textContent = data.name + '\n' + (data.description || '');
+                    document.getElementById('timezoneNotice').innerHTML = '🌎 ' +
+                        (isJapanese ? '主催者のタイムゾーン: ' : "Organizer's timezone: ") +
+                        data.creatorZone +
+                        '<br>' +
+                        (isJapanese ? '名前を入力し、あなたの現地時間で空いている日時に回答してください。' : 'Enter your name and respond based on your local time.');
+                    document.getElementById('boardTimezoneLabel').textContent =
+                        (isJapanese ? '主催者時間: ' : 'Organizer time: ') + data.creatorZone;
+                    refreshAttendeeSlots();
+
+                    // リアルタイムリスナー: 回答が追加・変更されたら自動更新
+                    db.ref('responses/' + eventIdParam).on('value', function(respSnapshot) {
+                        respondents = {};
+                        var respData = respSnapshot.val();
+                        if (respData) {
+                            var keys = Object.keys(respData);
+                            for (var i = 0; i < keys.length; i++) {
+                                var key = keys[i];
+                                var r = respData[key];
+                                respondents[key] = r;
+                            }
+                        }
+                        updateBoard();
+                    });
+                } else {
+                    showCustomAlert("Error", "Event not found.", false);
                 }
-
-                decodedEventData = data;
-                document.getElementById('displayEventName').innerText = decodedEventData.name;
-
-                if (decodedEventData.description && decodedEventData.description.trim() !== "") {
-                    var descDisplay = document.createElement('p');
-                    descDisplay.style.fontSize = "0.9rem";
-                    descDisplay.style.color = "#888888";
-                    descDisplay.style.marginTop = "5px";
-                    descDisplay.style.marginBottom = "20px";
-                    descDisplay.style.fontStyle = "italic";
-                    descDisplay.innerText = decodedEventData.description;
-                    document.getElementById('displayEventName').after(descDisplay);
-                }
-                document.getElementById('hostTZInfo').innerText = isJapanese ? '🌎 主催者のタイムゾーン: ' + decodedEventData.creatorZone : '🌎 Created by Host in Timezone: ' + decodedEventData.creatorZone;
-                document.getElementById('hostTZLabel').innerText = isJapanese ? '主催者時間: ' + decodedEventData.creatorZone : 'Host Time: ' + decodedEventData.creatorZone;
-
-                refreshAttendeeSlots();
-
-                // リアルタイムリスナー: 回答が追加・更新されるたびに自動で集計更新
-                db.ref('responses/' + eventId).on('value', function(respSnapshot) {
-                    respondents = respSnapshot.val() || {};
-                    updateBoard();
-                });
-
-            }).catch(function(error) {
-                console.error("Firebase read error:", error);
-                showCustomAlert(isJapanese ? "データの読み込みに失敗しました。" : "Failed to load event data.");
             });
-
-        } else if (legacyEventParam) {
-            // v1 互換: 旧 Base64 URL をサポート
-            document.getElementById('creatorView').style.display = 'none';
-            document.getElementById('attendeeView').removeAttribute('style');
-
+        } else if (eventDataParam) {
+            // v1 互換: URL エンコードされたデータ
             try {
-                decodedEventData = JSON.parse(decodeURIComponent(atob(legacyEventParam)));
-                document.getElementById('displayEventName').innerText = decodedEventData.name;
-
-                if (decodedEventData.description && decodedEventData.description.trim() !== "") {
-                    var descDisplay2 = document.createElement('p');
-                    descDisplay2.style.fontSize = "0.9rem";
-                    descDisplay2.style.color = "#888888";
-                    descDisplay2.style.marginTop = "5px";
-                    descDisplay2.style.marginBottom = "20px";
-                    descDisplay2.style.fontStyle = "italic";
-                    descDisplay2.innerText = decodedEventData.description;
-                    document.getElementById('displayEventName').after(descDisplay2);
-                }
-                document.getElementById('hostTZInfo').innerText = isJapanese ? '🌎 主催者のタイムゾーン: ' + decodedEventData.creatorZone : '🌎 Created by Host in Timezone: ' + decodedEventData.creatorZone;
-                document.getElementById('hostTZLabel').innerText = isJapanese ? '主催者時間: ' + decodedEventData.creatorZone : 'Host Time: ' + decodedEventData.creatorZone;
-
+                decodedEventData = JSON.parse(decodeURIComponent(eventDataParam));
+                document.getElementById('creatorView').style.display = 'none';
+                document.getElementById('attendeeView').style.display = 'block';
+                document.getElementById('subtitleText').textContent = decodedEventData.name + '\n' + (decodedEventData.description || '');
+                var zone = decodedEventData.creatorZone || 'UTC';
+                document.getElementById('timezoneNotice').innerHTML = '🌎 ' +
+                    (isJapanese ? '主催者のタイムゾーン: ' : "Organizer's timezone: ") + zone +
+                    '<br>' +
+                    (isJapanese ? '名前を入力し、あなたの現地時間で空いている日時に回答してください。' : 'Enter your name and respond based on your local time.');
+                document.getElementById('boardTimezoneLabel').textContent =
+                    (isJapanese ? '主催者時間: ' : 'Organizer time: ') + zone;
                 refreshAttendeeSlots();
-                updateBoard();
-
-            } catch(e) {
-                console.error(e);
-                showCustomAlert("Invalid Event URL.");
+            } catch (e) {
+                showCustomAlert("Error", "Invalid Event URL.", false);
             }
         }
 
         function refreshAttendeeSlots() {
-            var targetZone = document.getElementById('attendeeTZ').value;
-            var listContainer = document.getElementById('availabilityList');
-            listContainer.innerHTML = "";
-
-            decodedEventData.timestamps.forEach(function(ts) {
+            if (!decodedEventData) return;
+            var container = document.getElementById('attendeeSlots');
+            container.innerHTML = '';
+            var localZone = getLocalTimezone();
+            decodedEventData.timestamps.forEach(function(ts, idx) {
                 var utcDate = new Date(ts.utc);
-                var localString = utcDate.toLocaleString('ja-JP', {
-                    timeZone: targetZone,
-                    month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false
+                var localStr = utcDate.toLocaleString('en-US', {
+                    timeZone: localZone,
+                    weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit', hour12: false
                 });
-
                 var row = document.createElement('div');
                 row.className = 'slot-row';
-                row.innerHTML = '<span>' + localString + '</span>' +
-                    '<div class="radio-group" data-utc="' + ts.utc + '">' +
-                    '<button type="button" onclick="selectStatus(this, \'ok\')">〇</button>' +
-                    '<button type="button" onclick="selectStatus(this, \'maybe\')">△</button>' +
-                    '<button type="button" onclick="selectStatus(this, \'no\')">×</button>' +
+                row.innerHTML = '<span style="flex:1;font-size:0.85rem;">' + localStr + '</span>' +
+                    '<div class="radio-group">' +
+                    '<button onclick="selectStatus(this,\'ok\')" data-slot="' + idx + '">⭕</button>' +
+                    '<button onclick="selectStatus(this,\'maybe\')" data-slot="' + idx + '">🔺</button>' +
+                    '<button onclick="selectStatus(this,\'no\')" data-slot="' + idx + '">✖️</button>' +
                     '</div>';
-                listContainer.appendChild(row);
+                container.appendChild(row);
             });
         }
 
         function selectStatus(btn, status) {
             var group = btn.parentElement;
-            Array.from(group.children).forEach(function(b) { b.className = ''; });
-            if(status === 'ok') btn.className = 'active-ok';
-            if(status === 'maybe') btn.className = 'active-maybe';
-            if(status === 'no') btn.className = 'active-no';
-            group.setAttribute('data-value', status);
+            var buttons = group.children;
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].className = '';
+            }
+            if (status === 'ok') btn.className = 'active-ok';
+            else if (status === 'maybe') btn.className = 'active-maybe';
+            else if (status === 'no') btn.className = 'active-no';
         }
 
         function submitAttendance() {
             var name = document.getElementById('attendeeName').value.trim();
             var comment = document.getElementById('attendeeComment').value.trim();
-            var currentAttendeeTZ = document.getElementById('attendeeTZ').value;
-            if(!name) return showCustomAlert(isJapanese ? "名前を入力してください。" : "Please enter your name.");
-
-            var currentAnswers = {};
-            decodedEventData.timestamps.forEach(function(ts) {
-                var group = document.querySelector('.radio-group[data-utc="' + ts.utc + '"]');
-                var val = group ? group.getAttribute('data-value') : null;
-                currentAnswers[ts.utc] = val;
+            if (!name) {
+                showCustomAlert(
+                    isJapanese ? "入力エラー" : "Input Error",
+                    isJapanese ? "名前を入力してください。" : "Please enter your name.",
+                    false
+                );
+                return;
+            }
+            var answers = {};
+            var slots = document.querySelectorAll('#attendeeSlots .slot-row');
+            slots.forEach(function(row, idx) {
+                var active = row.querySelector('.radio-group button[class*="active"]');
+                if (active) {
+                    var cls = active.className;
+                    if (cls.indexOf('active-ok') !== -1) answers[decodedEventData.timestamps[idx].utc] = 'ok';
+                    else if (cls.indexOf('active-maybe') !== -1) answers[decodedEventData.timestamps[idx].utc] = 'maybe';
+                    else if (cls.indexOf('active-no') !== -1) answers[decodedEventData.timestamps[idx].utc] = 'no';
+                }
             });
 
-            var responseData = {
-                name: name,
-                tz: currentAttendeeTZ,
-                comment: comment,
-                answers: currentAnswers
-            };
+            var localZone = getLocalTimezone();
+            var respondentData = { name: name, comment: comment, timezone: localZone, answers: answers };
 
             if (currentEventId) {
-                // v2: Firebase に回答を保存
-                var refPath;
+                // v2: Firebase に保存
                 if (editingRespondentId) {
-                    refPath = db.ref('responses/' + currentEventId + '/' + editingRespondentId);
-                } else {
-                    refPath = db.ref('responses/' + currentEventId).push();
-                }
-
-                refPath.set(responseData).then(function() {
-                    if (editingRespondentId) {
-                        showCustomAlert(isJapanese ? name + 'さんの回答を更新しました！' : 'Updated response for ' + name + '!', isJapanese ? "成功" : "SUCCESS", true);
-                        editingRespondentId = null;
-                        document.getElementById('formActionTitle').innerText = isJapanese ? "名前を入力し、あなたの現地時間で空いている時間をタップしてください。" : "Please enter your name and select your availability.";
-                        document.getElementById('submitBtn').innerText = isJapanese ? "回答を送信する" : "Submit Response";
-                        document.getElementById('attendeeName').removeAttribute('disabled');
-                    } else {
-                        showCustomAlert(isJapanese ? '回答ありがとうございます、' + name + 'さん！' : 'Thank you, ' + name + '!\nYour response has been added.', isJapanese ? "成功" : "SUCCESS", true);
-                    }
-
-                    document.getElementById('attendeeName').value = '';
-                    document.getElementById('attendeeComment').value = '';
-                    document.querySelectorAll('.radio-group button').forEach(function(b) { b.className = ''; });
-                    document.querySelectorAll('.radio-group').forEach(function(g) { g.removeAttribute('data-value'); });
-                }).catch(function(error) {
-                    console.error("Firebase write error:", error);
-                    showCustomAlert(isJapanese ? "送信に失敗しました。もう一度お試しください。" : "Failed to submit. Please try again.");
-                });
-
-            } else {
-                // v1 互換: ローカル保存（旧 Base64 URL の場合）
-                if (editingRespondentId) {
-                    respondents[editingRespondentId] = responseData;
-                    showCustomAlert(isJapanese ? name + 'さんの回答を更新しました！' : 'Updated response for ' + name + '!', isJapanese ? "成功" : "SUCCESS", true);
+                    db.ref('responses/' + currentEventId + '/' + editingRespondentId).set(respondentData);
                     editingRespondentId = null;
-                    document.getElementById('formActionTitle').innerText = isJapanese ? "名前を入力し、あなたの現地時間で空いている時間をタップしてください。" : "Please enter your name and select your availability.";
-                    document.getElementById('submitBtn').innerText = isJapanese ? "回答を送信する" : "Submit Response";
-                    document.getElementById('attendeeName').removeAttribute('disabled');
                 } else {
-                    var newId = "user_" + Date.now();
-                    respondents[newId] = responseData;
-                    showCustomAlert(isJapanese ? '回答ありがとうございます、' + name + 'さん！' : 'Thank you, ' + name + '!\nYour response has been added.', isJapanese ? "成功" : "SUCCESS", true);
+                    db.ref('responses/' + currentEventId).push(respondentData);
                 }
-
-                document.getElementById('attendeeName').value = '';
-                document.getElementById('attendeeComment').value = '';
-                document.querySelectorAll('.radio-group button').forEach(function(b) { b.className = ''; });
-                document.querySelectorAll('.radio-group').forEach(function(g) { g.removeAttribute('data-value'); });
+            } else {
+                // v1 互換: ローカル保存
+                var id = editingRespondentId || ('local_' + Date.now());
+                respondents[id] = respondentData;
+                editingRespondentId = null;
                 updateBoard();
             }
-        }
 
-        function selectStatus(btn, status) {
-            const group = btn.parentElement;
-            Array.from(group.children).forEach(b => b.className = '');
-            if(status === 'ok') btn.className = 'active-ok';
-            if(status === 'maybe') btn.className = 'active-maybe';
-            if(status === 'no') btn.className = 'active-no';
-            group.setAttribute('data-value', status);
-        }
-
-        function submitAttendance() {
-            const name = document.getElementById('attendeeName').value.trim();
-            const comment = document.getElementById('attendeeComment').value.trim();
-            const currentAttendeeTZ = document.getElementById('attendeeTZ').value;
-            if(!name) return showCustomAlert(isJapanese ? "名前を入力してください。" : "Please enter your name.");
-
-            const currentAnswers = {};
-            decodedEventData.timestamps.forEach(ts => {
-                const group = document.querySelector(`.radio-group[data-utc="${ts.utc}"]`);
-                const val = group ? group.getAttribute('data-value') : null;
-                currentAnswers[ts.utc] = val;
-            });
-
-            if (editingRespondentId) {
-                respondents[editingRespondentId] = {
-                    name: name,
-                    tz: currentAttendeeTZ,
-                    comment: comment,
-                    answers: currentAnswers
-                };
-                showCustomAlert(isJapanese ? `${name}さんの回答を更新しました！` : `Updated response for ${name}!`, isJapanese ? "成功" : "SUCCESS", true);
-                editingRespondentId = null;
-                document.getElementById('formActionTitle').innerText = isJapanese ? "名前を入力し、あなたの現地時間で空いている時間をタップしてください。" : "Please enter your name and select your availability.";
-                document.getElementById('submitBtn').innerText = isJapanese ? "回答を送信する" : "Submit Response";
-                document.getElementById('attendeeName').removeAttribute('disabled');
-            } else {
-                const newId = "user_" + Date.now();
-                respondents[newId] = {
-                    name: name,
-                    tz: currentAttendeeTZ,
-                    comment: comment,
-                    answers: currentAnswers
-                };
-                showCustomAlert(isJapanese ? `回答ありがとうございます、${name}さん！` : `Thank you, ${name}!\nYour response has been added.`, isJapanese ? "成功" : "SUCCESS", true);
-            }
-
+            showCustomAlert(
+                isJapanese ? "成功" : "SUCCESS",
+                isJapanese ? "回答ありがとうございます、" + name + "さん！" : "Thank you, " + name + "!",
+                true
+            );
             document.getElementById('attendeeName').value = '';
             document.getElementById('attendeeComment').value = '';
-            document.querySelectorAll('.radio-group button').forEach(b => b.className = '');
-            document.querySelectorAll('.radio-group').forEach(g => g.removeAttribute('data-value'));
-
-            updateBoard();
+            var allBtns = document.querySelectorAll('#attendeeSlots .radio-group button');
+            for (var i = 0; i < allBtns.length; i++) {
+                allBtns[i].className = '';
+            }
         }
 
         function startEdit(id) {
-            const data = respondents[id];
-            if (!data) return;
-
+            var r = respondents[id];
+            if (!r) return;
             editingRespondentId = id;
-            document.getElementById('formActionTitle').innerHTML = isJapanese ? `🚨 <strong>回答編集中のユーザー: ${data.name}</strong>` : `🚨 <strong>Editing Response for: ${data.name}</strong>`;
-            document.getElementById('submitBtn').innerText = isJapanese ? "変更を保存してボードを更新" : "Save & Update Board";
-            
-            document.getElementById('attendeeName').value = data.name;
-            document.getElementById('attendeeName').setAttribute('disabled', 'true'); 
-            document.getElementById('attendeeComment').value = data.comment;
-            document.getElementById('attendeeTZ').value = data.tz;
-
-            refreshAttendeeSlots();
-
-            for (let utc in data.answers) {
-                const group = document.querySelector(`.radio-group[data-utc="${utc}"]`);
-                if (group) {
-                    const val = data.answers[utc];
-                    if (val) {
-                        const btn = group.querySelector(`button[onclick*="'${val}'"]`);
-                        if (btn) selectStatus(btn, val);
-                    }
+            document.getElementById('attendeeName').value = r.name;
+            document.getElementById('attendeeComment').value = r.comment || '';
+            var slots = document.querySelectorAll('#attendeeSlots .slot-row');
+            slots.forEach(function(row, idx) {
+                var utcKey = decodedEventData.timestamps[idx].utc;
+                var val = r.answers[utcKey];
+                var buttons = row.querySelectorAll('.radio-group button');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].className = '';
                 }
-            }
-            
-            document.getElementById('attendeeView').scrollIntoView({ behavior: 'smooth' });
+                if (val === 'ok') buttons[0].className = 'active-ok';
+                else if (val === 'maybe') buttons[1].className = 'active-maybe';
+                else if (val === 'no') buttons[2].className = 'active-no';
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function updateBoard() {
-            const respCount = Object.keys(respondents).length;
-            document.getElementById('responseCount').innerText = isJapanese ? `${respCount} 人が回答中` : `${respCount} response${respCount !== 1 ? 's' : ''}`;
-
-            const header = document.getElementById('tableHeader');
-            header.innerHTML = `<th style="width: 40%;">${isJapanese ? '時間枠' : 'Time Slot'}</th>`;
-            
-            for (let id in respondents) {
-                const u = respondents[id];
-                const th = document.createElement('th');
-                th.innerHTML = `
-                    ${u.name}<br>
-                    <span style='font-size:0.7rem;color:#00ff00;'>(${u.tz.split('/')[1]})</span>
-                    ${u.comment ? `<span class="comment-text">💬 ${u.comment}</span>` : ''}
-                    <span class="edit-link" onclick="startEdit('${id}')">⚙️ ${isJapanese ? '編集' : 'Edit'}</span>
-                `;
-                header.appendChild(th);
-            }
-
-            const tBody = document.getElementById('tableBody');
-            tBody.innerHTML = "";
-
-            let slotScores = {};
-            let maxScore = -1;
-
-            decodedEventData.timestamps.forEach(ts => {
-                slotScores[ts.utc] = 0;
-                for (let id in respondents) {
-                    const val = respondents[id].answers[ts.utc];
-                    if (val === 'ok') slotScores[ts.utc] += 2;
-                    if (val === 'maybe') slotScores[ts.utc] += 1;
-                }
-                if (slotScores[ts.utc] > maxScore && respCount > 0) {
-                    maxScore = slotScores[ts.utc];
-                }
+            if (!decodedEventData) return;
+            var table = document.getElementById('summaryTable');
+            var keys = Object.keys(respondents);
+            document.getElementById('respondentCount').textContent = keys.length + (isJapanese ? ' 人が回答中' : ' respondent(s)');
+            var creatorZone = decodedEventData.creatorZone || 'UTC';
+            var headerRow = '<tr><th style="text-align:left;">時間枠</th>';
+            keys.forEach(function(k) {
+                var r = respondents[k];
+                headerRow += '<th>' + r.name + '<br><span style="font-size:0.65rem;color:#888;">(' + (r.timezone || '').replace(/.*\//, '') + ')</span>';
+                if (r.comment) headerRow += '<br><span class="comment-text">💬 ' + r.comment + '</span>';
+                headerRow += '<br><span class="edit-link" onclick="startEdit(\'' + k + '\')">⚙️ ' + (isJapanese ? '編集' : 'Edit') + '</span>';
+                headerRow += '</th>';
             });
+            headerRow += '</tr>';
 
-            // 👑 すべての同点1位を王冠にする A案の完璧なハイライト処理
-            decodedEventData.timestamps.forEach(ts => {
-                const hostDate = new Date(ts.utc);
-                const hostString = hostDate.toLocaleString('ja-JP', {
-                    timeZone: decodedEventData.creatorZone,
-                    month: 'numeric', day: 'numeric', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false
+            var bestScore = -1;
+            var bestIdx = -1;
+            var rows = '';
+            decodedEventData.timestamps.forEach(function(ts, idx) {
+                var utcDate = new Date(ts.utc);
+                var label = utcDate.toLocaleString('en-US', {
+                    timeZone: creatorZone,
+                    weekday: 'short', month: 'short', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit', hour12: false
                 });
-
-                const tr = document.createElement('tr');
-                tr.id = "row-" + btoa(ts.utc).replace(/=/g, "");
-                tr.innerHTML = `<td class="slot-axis">${hostString}</td>`;
-
-                for (let id in respondents) {
-                    const val = respondents[id].answers[ts.utc];
-                    const td = document.createElement('td');
-                    if (val === 'ok') { td.innerText = '〇'; td.className = 'cell-ok'; }
-                    else if (val === 'maybe') { td.innerText = '△'; td.className = 'cell-maybe'; }
-                    else if (val === 'no') { td.innerText = '×'; td.className = 'cell-no'; }
-                    else { td.innerText = 'ー'; }
-                    tr.appendChild(td);
-                }
-
-                if (maxScore > 0 && slotScores[ts.utc] === maxScore) {
-                    tr.classList.add('row-best');
-                }
-
-                tBody.appendChild(tr);
+                var score = 0;
+                var cells = '';
+                keys.forEach(function(k) {
+                    var val = respondents[k].answers[ts.utc] || '-';
+                    var cls = '';
+                    var display = val;
+                    if (val === 'ok') { cls = 'cell-ok'; display = '⭕'; score += 2; }
+                    else if (val === 'maybe') { cls = 'cell-maybe'; display = '🔺'; score += 1; }
+                    else if (val === 'no') { cls = 'cell-no'; display = '✖️'; }
+                    cells += '<td class="' + cls + '">' + display + '</td>';
+                });
+                if (score > bestScore) { bestScore = score; bestIdx = idx; }
+                rows += '<tr data-idx="' + idx + '"><td class="slot-axis">' + label + '</td>' + cells + '</tr>';
             });
+
+            table.innerHTML = headerRow + rows;
+            if (bestIdx >= 0 && keys.length > 0) {
+                var bestRow = table.querySelector('tr[data-idx="' + bestIdx + '"]');
+                if (bestRow) bestRow.classList.add('row-best');
+            }
         }
 
-// 💡 言語切り替え・テーマ切り替え用のファンクション追加
-
-function toggleLanguage() {
-    // 現在の言語判定を反転、またはlocalStorageに保存して切り替え
-    const currentIsJa = document.getElementById('pageTitle').innerText.includes("MeridiMeet - Schcedule Creator") === false;
-    // シンプルにページをリロードせずに切り替えるか、フラグを切り替えて再レンダリングする構造にします
-    // 今回は簡易的に、現在の状態をトグルしてリロードする実装が確実です
-    const newLangState = !isJapanese;
-    // ブラウザの言語設定を一時的に上書きする代わりに、HTMLのテキスト要素を動的に書き換える関数を定義できます
-    // 実装の容易さのため、ページ全体で利用できるグローバルな切り替え処理を行います
-}
-
+        renderCalendar();
     </script>
 
-    <script data-goatcounter="https://meridi-lingo.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+    <script data-goatcounter="https://meridibrand.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </body>
 </html>
