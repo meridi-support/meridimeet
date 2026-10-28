@@ -588,14 +588,18 @@
                     cells += '<td class="' + cellClass + '">' + display + '</td>';
                 });
                 if (score > bestScore) { bestScore = score; bestIdx = idx; }
-                rows += '<tr data-idx="' + idx + '"><td class="slot-axis">' + label + '</td>' + cells + '</tr>';
+                rows += '<tr data-idx="' + idx + '" data-score="' + score + '"><td class="slot-axis">' + label + '</td>' + cells + '</tr>';
             });
 
             table.innerHTML = headerRow + rows;
-            if (bestIdx >= 0 && keys.length > 0) {
-                var bestRow = table.querySelector('tr[data-idx="' + bestIdx + '"]');
-                if (bestRow) bestRow.classList.add('row-best');
-            }
+            if (bestScore > 0 && keys.length > 0) {
+    var allRows = table.querySelectorAll('tr[data-idx]');
+    for (var r = 0; r < allRows.length; r++) {
+        if (parseInt(allRows[r].getAttribute('data-score')) === bestScore) {
+            allRows[r].classList.add('row-best');
+        }
+    }
+}
         }
 
         renderCalendar();
