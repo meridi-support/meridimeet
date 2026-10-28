@@ -80,6 +80,7 @@
     </script>
 </head>
 
+
 <body>
 
     <h1>MeridiMeet</h1>
@@ -206,7 +207,6 @@
             document.getElementById('customModal').classList.remove('active');
         }
 
-        // カテゴリ: フリー入力の表示切替
         function toggleCustomCategory() {
             var sel = document.getElementById('eventCategory');
             var input = document.getElementById('customCategoryInput');
@@ -275,7 +275,6 @@
             var list = document.getElementById('timeSlotList');
             if (selectedDates.length === 0) { section.style.display = 'none'; return; }
             section.style.display = 'block';
-            // デフォルト 3 つのタイムスロットを追加
             if (list.children.length === 0) {
                 addTimeSlot();
                 addTimeSlot();
@@ -313,8 +312,6 @@
             var name = document.getElementById('eventName').value.trim();
             var description = document.getElementById('eventDescription').value.trim();
             var localZone = getLocalTimezone();
-
-            // カテゴリ取得（フリー入力対応）
             var categorySel = document.getElementById('eventCategory');
             var category = categorySel.value;
             if (category === '__custom__') {
@@ -328,7 +325,6 @@
                     return;
                 }
             }
-
             if (!name) {
                 showCustomAlert(
                     isJapanese ? "入力エラー" : "Input Error",
@@ -358,16 +354,12 @@
                     timestamps.push({ original: localStr, utc: localDate.toISOString() });
                 });
             });
-
             var data = { name: name, description: description, category: category, creatorZone: localZone, timestamps: timestamps };
-
-            // Firebase にイベントを保存
             var newEventRef = db.ref('events').push();
             var eventId = newEventRef.key;
             newEventRef.set(data).then(function() {
                 var baseURL = window.location.href.split('?')[0];
                 var finalURL = baseURL + '?id=' + eventId;
-
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(finalURL).then(function() {
                         showCustomAlert(
@@ -383,7 +375,6 @@
                         true
                     );
                 }
-
                 setTimeout(function() {
                     window.location.href = finalURL;
                 }, 1500);
@@ -414,8 +405,6 @@
                     document.getElementById('boardTimezoneLabel').textContent =
                         (isJapanese ? '主催者時間: ' : 'Organizer time: ') + data.creatorZone;
                     refreshAttendeeSlots();
-
-                    // リアルタイムリスナー
                     db.ref('responses/' + eventIdParam).on('value', function(respSnapshot) {
                         respondents = {};
                         var respData = respSnapshot.val();
@@ -432,7 +421,6 @@
                 }
             });
         } else if (eventDataParam) {
-            // v1 互換
             try {
                 decodedEventData = JSON.parse(decodeURIComponent(eventDataParam));
                 document.getElementById('creatorView').style.display = 'none';
@@ -502,10 +490,11 @@
             slots.forEach(function(row, idx) {
                 var active = row.querySelector('.radio-group button[class*="active"]');
                 if (active) {
-                    var cls = active.className;
-                    if (cls.indexOf('active-ok') !== -1) answers[decodedEventData.timestamps[idx].utc] = 'ok';
-                    else if (cls.indexOf('active-maybe') !== -1) answers[decodedEventData.timestamps[idx].utc] = 'maybe';
-                    else if (cls.indexOf('active-no') !== -1) answers[decodedEventData.timestamps[idx].utc] = 'no';
+                    var safeKey = decodedEventData.timestamps[idx].utc.replace(/\./g, '-');
+                    var btnClass = active.className;
+                    if (btnClass.indexOf('active-ok') !== -1) answers[safeKey] = 'ok';
+                    else if (btnClass.indexOf('active-maybe') !== -1) answers[safeKey] = 'maybe';
+                    else if (btnClass.indexOf('active-no') !== -1) answers[safeKey] = 'no';
                 }
             });
 
@@ -513,7 +502,6 @@
             var respondentData = { name: name, comment: comment, timezone: localZone, answers: answers };
 
             if (currentEventId) {
-                // v2: Firebase に保存
                 if (editingRespondentId) {
                     db.ref('responses/' + currentEventId + '/' + editingRespondentId).set(respondentData);
                     editingRespondentId = null;
@@ -521,7 +509,6 @@
                     db.ref('responses/' + currentEventId).push(respondentData);
                 }
             } else {
-                // v1 互換: ローカル保存
                 var id = editingRespondentId || ('local_' + Date.now());
                 respondents[id] = respondentData;
                 editingRespondentId = null;
@@ -549,8 +536,8 @@
             document.getElementById('attendeeComment').value = r.comment || '';
             var slots = document.querySelectorAll('#attendeeSlots .slot-row');
             slots.forEach(function(row, idx) {
-                var utcKey = decodedEventData.timestamps[idx].utc;
-                var val = r.answers[utcKey];
+                var safeKey = decodedEventData.timestamps[idx].utc.replace(/\./g, '-');
+                var val = r.answers[safeKey];
                 var buttons = row.querySelectorAll('.radio-group button');
                 for (var i = 0; i < buttons.length; i++) {
                     buttons[i].className = '';
@@ -591,13 +578,14 @@
                 var score = 0;
                 var cells = '';
                 keys.forEach(function(k) {
-                    var val = respondents[k].answers[ts.utc] || '-';
-                    var cls = '';
+                    var safeKey = ts.utc.replace(/\./g, '-');
+                    var val = respondents[k].answers[safeKey] || '-';
+                    var cellClass = '';
                     var display = val;
-                    if (val === 'ok') { cls = 'cell-ok'; display = '⭕'; score += 2; }
-                    else if (val === 'maybe') { cls = 'cell-maybe'; display = '🔺'; score += 1; }
-                    else if (val === 'no') { cls = 'cell-no'; display = '✖️'; }
-                    cells += '<td class="' + cls + '">' + display + '</td>';
+                    if (val === 'ok') { cellClass = 'cell-ok'; display = '⭕'; score += 2; }
+                    else if (val === 'maybe') { cellClass = 'cell-maybe'; display = '🔺'; score += 1; }
+                    else if (val === 'no') { cellClass = 'cell-no'; display = '✖️'; }
+                    cells += '<td class="' + cellClass + '">' + display + '</td>';
                 });
                 if (score > bestScore) { bestScore = score; bestIdx = idx; }
                 rows += '<tr data-idx="' + idx + '"><td class="slot-axis">' + label + '</td>' + cells + '</tr>';
@@ -617,5 +605,4 @@
 
 </body>
 </html>
-
 
