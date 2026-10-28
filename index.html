@@ -113,7 +113,7 @@
         </div>
         <div class="section">
             <label>🌐 Category / カテゴリ:</label>
-            <select id="eventCategory">
+            <select id="eventCategory" onchange="toggleCustomCategory()">
                 <optgroup label="Business / ビジネス">
                     <option value="Team Meeting">Team Meeting / チーム会議</option>
                     <option value="Client Call">Client Call / クライアント通話</option>
@@ -138,8 +138,10 @@
                 <optgroup label="Other / その他">
                     <option value="Study Groups">Study Groups / 勉強会</option>
                     <option value="Gaming & Teams">Gaming & Teams / ゲーム＆チーム</option>
+                    <option value="__custom__">✏️ Other (Free Input) / その他（自由入力）</option>
                 </optgroup>
             </select>
+            <input type="text" id="customCategoryInput" placeholder="e.g. BBQ / バーベキュー" style="display:none;margin-top:5px;">
         </div>
         <button class="action-btn" onclick="generateLink()">時差換算URLを発行する (クリップボードにコピー)</button>
     </div>
@@ -205,6 +207,19 @@
             document.getElementById('customModal').classList.remove('active');
         }
 
+        // カテゴリ: フリー入力の表示切替
+        function toggleCustomCategory() {
+            var sel = document.getElementById('eventCategory');
+            var input = document.getElementById('customCategoryInput');
+            if (sel.value === '__custom__') {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+            }
+        }
+
         function renderCalendar() {
             var months = isJapanese
                 ? ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月']
@@ -261,7 +276,12 @@
             var list = document.getElementById('timeSlotList');
             if (selectedDates.length === 0) { section.style.display = 'none'; return; }
             section.style.display = 'block';
-            if (list.children.length === 0) addTimeSlot();
+            // デフォルト 3 つのタイムスロットを追加
+            if (list.children.length === 0) {
+                addTimeSlot();
+                addTimeSlot();
+                addTimeSlot();
+            }
         }
         function addTimeSlot() {
             var list = document.getElementById('timeSlotList');
@@ -294,6 +314,22 @@
             var name = document.getElementById('eventName').value.trim();
             var description = document.getElementById('eventDescription').value.trim();
             var localZone = getLocalTimezone();
+
+            // カテゴリ取得（フリー入力対応）
+            var categorySel = document.getElementById('eventCategory');
+            var category = categorySel.value;
+            if (category === '__custom__') {
+                category = document.getElementById('customCategoryInput').value.trim();
+                if (!category) {
+                    showCustomAlert(
+                        isJapanese ? "入力エラー" : "Input Error",
+                        isJapanese ? "カテゴリを入力してください。" : "Please enter a category.",
+                        false
+                    );
+                    return;
+                }
+            }
+
             if (!name) {
                 showCustomAlert(
                     isJapanese ? "入力エラー" : "Input Error",
@@ -324,16 +360,15 @@
                 });
             });
 
-            var data = { name: name, description: description, creatorZone: localZone, timestamps: timestamps };
+            var data = { name: name, description: description, category: category, creatorZone: localZone, timestamps: timestamps };
 
-            // Firebase にイベントを保存 → 短い ID を生成
+            // Firebase にイベントを保存
             var newEventRef = db.ref('events').push();
             var eventId = newEventRef.key;
             newEventRef.set(data).then(function() {
                 var baseURL = window.location.href.split('?')[0];
                 var finalURL = baseURL + '?id=' + eventId;
 
-                // クリップボードにコピー
                 if (navigator.clipboard && navigator.clipboard.writeText) {
                     navigator.clipboard.writeText(finalURL).then(function() {
                         showCustomAlert(
@@ -364,7 +399,6 @@
         var eventDataParam = urlParams.get('event');
 
         if (eventIdParam) {
-            // v2: Firebase から読み込み
             currentEventId = eventIdParam;
             db.ref('events/' + eventIdParam).once('value').then(function(snapshot) {
                 var data = snapshot.val();
@@ -382,16 +416,14 @@
                         (isJapanese ? '主催者時間: ' : 'Organizer time: ') + data.creatorZone;
                     refreshAttendeeSlots();
 
-                    // リアルタイムリスナー: 回答が追加・変更されたら自動更新
+                    // リアルタイムリスナー
                     db.ref('responses/' + eventIdParam).on('value', function(respSnapshot) {
                         respondents = {};
                         var respData = respSnapshot.val();
                         if (respData) {
                             var keys = Object.keys(respData);
                             for (var i = 0; i < keys.length; i++) {
-                                var key = keys[i];
-                                var r = respData[key];
-                                respondents[key] = r;
+                                respondents[keys[i]] = respData[keys[i]];
                             }
                         }
                         updateBoard();
@@ -401,7 +433,7 @@
                 }
             });
         } else if (eventDataParam) {
-            // v1 互換: URL エンコードされたデータ
+            // v1 互換
             try {
                 decodedEventData = JSON.parse(decodeURIComponent(eventDataParam));
                 document.getElementById('creatorView').style.display = 'none';
