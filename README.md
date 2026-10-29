@@ -1,12 +1,13 @@
+
 <p align="center">
   <img src="MeridiMeet.jpg" alt="MeridiMeet" width="100%">
 </p>
 
 # 🌐 MeridiMeet — Multi-Timezone Scheduler
 
-> No ads. No signup. No server. Just schedule.
+> No ads. No signup. Just schedule.
 
-**MeridiMeet** is a free, offline-ready timezone scheduler built for global teams, gaming clans, and anyone coordinating across timezones.
+**MeridiMeet** is a free, real-time timezone scheduler built for global teams, gaming clans, and anyone coordinating across timezones.
 
 🔗 **[Try it now → meridi-support.github.io/meridimeet](https://meridi-support.github.io/meridimeet)**
 
@@ -18,11 +19,13 @@
 |---------|-------------|
 | 🌍 **Auto Timezone Detection** | Detects your timezone automatically — no manual setup |
 | 🔄 **Instant Time Conversion** | See meeting times in everyone's local time |
+| 🔥 **Real-Time Sync** | All responses sync live via Firebase — everyone sees the same board |
+| 🔗 **Short URL Sharing** | Clean `?id=xxx` links instead of long encoded URLs |
+| 👑 **Smart Best Time** | Tied scores all get 👑 — no one gets left out |
 | 🎮 **Built for Gaming & Global Teams** | Perfect for Discord clans, guilds, and international meetups |
 | 🆓 **100% Free** | No hidden fees. No premium tier. Free forever. |
 | 🚫 **No Ads** | Zero ads. Zero tracking. Zero telemetry. |
 | 📝 **No Signup Required** | No account needed. Just open and use. |
-| 🔒 **No Server** | Everything runs in your browser. Your data stays with you. |
 | 🌐 **Auto Language Switch** | Switches between English and Japanese based on your browser |
 | 📋 **One-Click Share** | Generate a timezone-converted URL and share via clipboard |
 
@@ -40,13 +43,31 @@
 
 ## 🚀 How to Use
 
-1. **Enter your event name**
+1. **Enter your event name** and description
 2. **Select candidate dates** from the calendar
-3. **Add time slots** (24-hour format)
-4. **Click "Generate URL"** — a timezone-aware link is copied to your clipboard
-5. **Share the link** — recipients see times converted to their local timezone
+3. **Add time slots** (30-min intervals)
+4. **Choose a category** (Business, Social, Gaming, Sports, or custom)
+5. **Click "Generate URL"** — a short Firebase-powered link is copied to your clipboard
+6. **Share the link** — recipients respond with ⭕🔺✖️ and see results in real-time
 
 That's it. No signup. No install. No hassle.
+
+---
+
+## 📜 Changelog
+
+### 🔥 v2.0.0 — 2026-11-01
+- Firebase Realtime Database integration
+- Live response sync across all participants
+- Short URL sharing (`?id=xxx`)
+- Tied scores show multiple 👑
+- Category selection with custom free-input option
+- Default 3 time slots
+
+### 🌱 v1.0.0 — 2026-09-10
+- Initial release (URL-encoded data sharing)
+- Cross-timezone scheduling
+- ○△✕ response system with 👑 best time
 
 ---
 
@@ -54,33 +75,32 @@ That's it. No signup. No install. No hassle.
 
 > *"All our tools are vessels. What you fill them with is up to you."*
 
-MeridiMeet is part of **[meridistore](https://github.com/meridi-support)** — indie tools for people tired of subscriptions.
+MeridiMeet is part of **[Meridi Brand](https://github.com/meridi-support)** — indie tools for people tired of subscriptions.
 
 **No Ads. No Subscriptions. Just Tools.**
 
 ---
 
-## 🛒 More from meridistore
+## 🛒 More from Meridi Brand
 
 | Tool | Description | Price |
 |------|-------------|-------|
 | 🌐 **MeridiMeet** | Multi-Timezone Scheduler | Free |
-| 📝 **[MeridiSync](https://github.com/meridi-support/meridi-square)** | Resident Text Snippet Expander | [BOOTH ¥1,000](https://meridistore.booth.pm/) / [Gumroad $8](https://meridius4.gumroad.com/) |
-| 🪄 **[MeridiLingo](https://github.com/meridi-support/meridi-lingo)** | Learn English Through Pop Culture | [BOOTH ¥500](https://meridistore.booth.pm/items/8992102) / [Gumroad $3](https://meridius4.gumroad.com/l/meridilingo) |
-
+| 🪄 **[MeridiLingo](https://github.com/meridi-support/meridilingo)** | English Expression Learning Tool | Free |
+| 💻 **[MeridiSync](https://github.com/meridi-support/meridisync)** | Resident Text Snippet Expander | [BOOTH ¥1,000](https://meridistore.booth.pm/) / [Gumroad $8](https://meridius4.gumroad.com/) |
 
 ---
 
-  ## 💬 Feedback & Community
+## 💬 Feedback & Community
 
-  We'd love to hear how you're using MeridiMeet!
+We'd love to hear how you're using MeridiMeet!
 
-  - 🌍 [Tell us how you use it](https://github.com/meridi-support/meridi-square/discussions/3)
-  - 💡 Feature requests & ideas? [Start a discussion](https://github.com/meridi-support/meridi-square/discussions)
-  - 🐛 Found a bug? [Open an issue](https://github.com/meridi-support/meridi-square/issues)
+- 🌍 [Tell us how you use it](https://github.com/meridi-support/meridimeet/discussions)
+- 💡 Feature requests & ideas? [Start a discussion](https://github.com/meridi-support/meridimeet/discussions)
+- 🐛 Found a bug? [Open an issue](https://github.com/meridi-support/meridimeet/issues)
 
-  Every voice — big or small — is welcome.
-  日本語でもお気軽にどうぞ！ 🐟
+Every voice — big or small — is welcome.
+日本語でもお気軽にどうぞ！ 🐟
 
 ---
 
