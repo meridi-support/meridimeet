@@ -9,7 +9,13 @@
 
 **MeridiMeet** is a free, real-time timezone scheduler built for global teams, gaming clans, and anyone coordinating across timezones.
 
-🔗 **[Try it now → meridi-support.github.io/meridimeet](https://meridi-support.github.io/meridimeet)**
+🔗 **[Try it now → meridibrand.com/meet](https://meridibrand.com/meet)**
+
+---
+
+## 🌐 Visit Us
+
+**[meridibrand.com](https://meridibrand.com)** — Our official home since November 1st, 2026.
 
 ---
 
@@ -75,19 +81,22 @@ That's it. No signup. No install. No hassle.
 
 > *"All our tools are vessels. What you fill them with is up to you."*
 
-MeridiMeet is part of **[Meridi Brand](https://github.com/meridi-support)** — indie tools for people tired of subscriptions.
+MeridiMeet is part of **[Meridi Brand](https://meridibrand.com)** — indie tools for people tired of subscriptions.
 
 **No Ads. No Subscriptions. Just Tools.**
 
 ---
 
-## 🛒 More from Meridi Brand
+## 🌐 Meridi Family
 
-| Tool | Description | Price |
-|------|-------------|-------|
-| 🌐 **MeridiMeet** | Multi-Timezone Scheduler | Free |
-| 🪄 **[MeridiLingo](https://github.com/meridi-support/meridilingo)** | English Expression Learning Tool | Free |
-| 💻 **[MeridiSync](https://github.com/meridi-support/meridisync)** | Resident Text Snippet Expander | [BOOTH ¥1,000](https://meridistore.booth.pm/) / [Gumroad $8](https://meridius4.gumroad.com/) |
+| Tool | Description | Link | Live Demo |
+|------|-------------|------|-----------|
+| 💻 **MeridiSync** | High-speed snippet manager (Windows) | [Gumroad ($8)](https://meridius4.gumroad.com/l/meridisync) / [BOOTH (¥1,000)](https://meridistore.booth.pm/items/8790105) | [Try Free](https://meridi-support.github.io/meridisync-demo/) |
+| 📅 **MeridiMeet** | Multi-Timezone Scheduler | [Gumroad (Free)](https://meridius4.gumroad.com/l/meridimeet) / [BOOTH (Free)](https://meridistore.booth.pm/items/6340573) | [meridibrand.com/meet](https://meridibrand.com/meet) |
+| 🐾🪄 **MeridiLingo** | 450 expressions — Learn English Through Pop Culture | [Gumroad (Free)](https://meridius4.gumroad.com/l/meridilingo) / [BOOTH (Free)](https://meridistore.booth.pm/items/8992102) | [meridibrand.com/lingo](https://meridibrand.com/lingo) |
+| 🗺️ **MeridiAtlas** | GIS for the Rest of Us | In Development | — |
+| 📔 **MeridiDiary** | Your Journey, Your Map | Planned | — |
+| 🎮 **MeridiPlay** | Fun & Games Collection | Coming Soon | — |
 
 ---
 
@@ -104,6 +113,24 @@ Every voice — big or small — is welcome.
 
 ---
 
+## 🔗 Connect
+
+| Channel | Link |
+|---------|------|
+| 🌐 Official Site | [meridibrand.com](https://meridibrand.com) |
+| 💬 Community | [Discussions (meridi-square)](https://github.com/meridi-support/meridi-square/discussions) |
+| ☕ Support Us | [Buy Me a Coffee](https://buymeacoffee.com/meridius) |
+| 📧 Contact | meridisupport@gmail.com |
+
+---
+
 ## 📄 License
 
 MIT License — Use it, modify it, share it. 🐟 Keep swimming.
+
+---
+
+*No Ads. No Subscriptions. Just Tools.* 🐾
+
+**Meridi Brand © 2026 — Since November 1st, 2026**
+
