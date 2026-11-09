@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,8 +87,13 @@
             messagingSenderId: "254458169537",
             appId: "1:254458169537:web:0c6d863c2501a655b4ac40"
         };
-        firebase.initializeApp(firebaseConfig);
-        var db = firebase.database();
+        var db = null;
+        try {
+            if (typeof firebase !== 'undefined') {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.database();
+            }
+        } catch (e) { console.warn('Firebase init failed:', e); db = null; }
     </script>
 </head>
 
@@ -188,7 +192,7 @@
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer (v2.0.1: links fixed) -->
     <div class="premium-ad-bar">
         MeridiMeet <span class="version-clickable" onclick="document.getElementById('changelogOverlay').classList.add('active');">v2.0.1</span> |
         <span class="ad-tag">▲ Presented by</span> |
@@ -200,6 +204,7 @@
         🛒 <a href="https://meridius4.gumroad.com" target="_blank">Gumroad</a> | <a href="https://meridistore.booth.pm" target="_blank">BOOTH</a> ·
         ☕ <a href="https://buymeacoffee.com/meridius" target="_blank">サポート</a>
     </div>
+
 
     <script>
         var isJapanese = (navigator.language || navigator.userLanguage || '').startsWith('ja');
@@ -369,6 +374,10 @@
                 });
             });
             var data = { name: name, description: description, category: category, creatorZone: localZone, timestamps: timestamps };
+            if (!db) {
+                showCustomAlert("Error", isJapanese ? "サーバーに接続できませんでした。通信環境を確認して、もう一度お試しください。" : "Could not connect to the server. Please check your connection and try again.", false);
+                return;
+            }
             var newEventRef = db.ref('events').push();
             var eventId = newEventRef.key;
             newEventRef.set(data).then(function() {
@@ -402,7 +411,9 @@
         var eventIdParam = urlParams.get('id');
         var eventDataParam = urlParams.get('event');
 
-        if (eventIdParam) {
+        if (eventIdParam && !db) {
+            showCustomAlert("Error", isJapanese ? "サーバーに接続できませんでした。" : "Could not connect to the server.", false);
+        } else if (eventIdParam) {
             currentEventId = eventIdParam;
             db.ref('events/' + eventIdParam).once('value').then(function(snapshot) {
                 var data = snapshot.val();
@@ -515,7 +526,7 @@
             var localZone = getLocalTimezone();
             var respondentData = { name: name, comment: comment, timezone: localZone, answers: answers };
 
-            if (currentEventId) {
+            if (currentEventId && db) {
                 if (editingRespondentId) {
                     db.ref('responses/' + currentEventId + '/' + editingRespondentId).set(respondentData);
                     editingRespondentId = null;
@@ -623,6 +634,12 @@
   <div class="changelog-box" style="position:relative;">
     <button class="changelog-close" onclick="document.getElementById('changelogOverlay').classList.remove('active');">&times;</button>
     <h2>📜 CHANGELOG</h2>
+    <h3>🔧 v2.0.1 — 2026-11-09</h3>
+    <ul>
+      <li>Fixed footer links (MeridiLingo / MeridiSync / Support)</li>
+      <li>Added link to the official site</li>
+    </ul>
+    <hr>
     <h3>🔥 v2.0.0 — 2026-11-01</h3>
     <ul>
       <li>Firebase Realtime Database integration</li>
@@ -645,4 +662,3 @@
 
 </body>
 </html>
-
