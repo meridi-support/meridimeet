@@ -62,6 +62,10 @@ That's it. No signup. No install. No hassle.
 
 ## 📜 Changelog
 
+### 🔧 v2.0.1 — 2026-11-09
+- Fixed footer links (MeridiLingo / MeridiSync / Support)
+- Added link to the official site
+
 ### 🔥 v2.0.0 — 2026-11-01
 - Firebase Realtime Database integration
 - Live response sync across all participants
