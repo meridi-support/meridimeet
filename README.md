@@ -1,4 +1,3 @@
-
 <p align="center">
   <img src="MeridiMeet.jpg" alt="MeridiMeet" width="100%">
 </p>
@@ -30,10 +29,18 @@
 | 👑 **Smart Best Time** | Tied scores all get 👑 — no one gets left out |
 | 🎮 **Built for Gaming & Global Teams** | Perfect for Discord clans, guilds, and international meetups |
 | 🆓 **100% Free** | No hidden fees. No premium tier. Free forever. |
-| 🚫 **No Ads** | Zero ads. Zero tracking. Zero telemetry. |
+| 🚫 **No Ads** | Zero ads. No tracking cookies. Only an anonymous page-view count via GoatCounter. |
 | 📝 **No Signup Required** | No account needed. Just open and use. |
 | 🌐 **Auto Language Switch** | Switches between English and Japanese based on your browser |
 | 📋 **One-Click Share** | Generate a timezone-converted URL and share via clipboard |
+
+---
+
+## 🔒 Privacy
+
+- Event names, time slots and responses are stored in **Firebase Realtime Database** so that everyone with the link sees the same board.
+- No account, no email, no ads.
+- Only an anonymous page-view count via [GoatCounter](https://www.goatcounter.com/).
 
 ---
 
@@ -95,12 +102,13 @@ MeridiMeet is part of **[Meridi Brand](https://meridibrand.com)** — indie tool
 
 | Tool | Description | Link | Live Demo |
 |------|-------------|------|-----------|
-| 💻 **MeridiSync** | High-speed snippet manager (Windows) | [Gumroad ($8)](https://meridius4.gumroad.com/l/meridisync) / [BOOTH (¥1,000)](https://meridistore.booth.pm/items/8790105) | [Try Free](https://meridi-support.github.io/meridisync-demo/) |
 | 📅 **MeridiMeet** | Multi-Timezone Scheduler | [Gumroad (Free)](https://meridius4.gumroad.com/l/meridimeet) / [BOOTH (Free)](https://meridistore.booth.pm/items/8814602) | [meridibrand.com/meet](https://meridibrand.com/meet) |
 | 🐾🪄 **MeridiLingo** | 560 expressions — Language, Culture & AI Prompt Vocabulary | [Gumroad (Free)](https://meridius4.gumroad.com/l/meridilingo) / [BOOTH (Free)](https://meridistore.booth.pm/items/8992102) | [meridibrand.com/lingo](https://meridibrand.com/lingo) |
+| 🌌 **MeridiStars** | Planetarium — 88 constellations, 119 locations | Free | [meridibrand.com/stars](https://meridibrand.com/stars) |
+| 🎮 **MeridiPlay** | 18 browser games — casino, fortune-telling, retro candy-shop machines | Free | [meridibrand.com/play](https://meridibrand.com/play) |
+| 💻 **MeridiSync** | High-speed snippet manager (Windows) | [Gumroad ($8)](https://meridius4.gumroad.com/l/meridisync) / [BOOTH (¥1,000)](https://meridistore.booth.pm/items/8790105) | [Try Free](https://meridi-support.github.io/meridisync-demo/) |
 | 🗺️ **MeridiAtlas** | GIS for the Rest of Us | In Development | — |
 | 📔 **MeridiDiary** | Your Journey, Your Map | Planned | — |
-| 🎮 **MeridiPlay** | Fun & Games Collection (6 Modes) | Coming Soon | — |
 
 ---
 
@@ -108,8 +116,8 @@ MeridiMeet is part of **[Meridi Brand](https://meridibrand.com)** — indie tool
 
 We'd love to hear how you're using MeridiMeet!
 
-- 🌍 [Tell us how you use it](https://github.com/meridi-support/meridimeet/discussions)
-- 💡 Feature requests & ideas? [Start a discussion](https://github.com/meridi-support/meridimeet/discussions)
+- 🌍 [Tell us how you use it](https://github.com/meridi-support/meridi-square/discussions)
+- 💡 Feature requests & ideas? [Start a discussion](https://github.com/meridi-support/meridi-square/discussions)
 - 🐛 Found a bug? [Open an issue](https://github.com/meridi-support/meridimeet/issues)
 
 Every voice — big or small — is welcome.
