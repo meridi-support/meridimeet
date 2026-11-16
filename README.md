@@ -116,7 +116,7 @@ MeridiMeet is part of **[Meridi Brand](https://meridibrand.com)** — indie tool
 
 ---
 
-📅 MeridiMeet → 🐾 MeridiLingo → 💻 MeridiSync → 🌌 MeridiStars → 🪨 MeridiGround → 🌊 MeridiDepths → 🎮 MeridiPlay → 🧮 MeridiConvert → 🗺️ MeridiAtlas → 📔 MeridiDiary
+📅 MeridiMeet → 🐾 MeridiLingo → 💻 MeridiSync → 🌌 MeridiStars → 🪨 MeridiGround → 🌊 MeridiDepths → 🎮 MeridiPlay → 🧮 MeridiConvert → 🧰 Meridi Tools → 🗺️ MeridiAtlas → 📔 MeridiDiary
 
 ---
 ## 💬 Feedback & Community
