@@ -76,6 +76,9 @@ That's it. No signup. No install. No hassle.
 
 ## 📜 Changelog
 
+### ☕ v2.0.3 — 2026-11-24
+- Changed: after your link is created, the message now stays 2 s (was 3 s) before opening the board
+- Changed: press OK to go to the board right away — no more waiting
 ### 📅 v2.0.2 — 2026-11-24
 - New: 📅 "Add to calendar" for the 👑 BEST slot — a small .ics file made on the spot (no server). Pick the length (30 min – 3 h). Opens in each person's own time zone
 - New: 🌍 "Show my time" switches the board between the organizer's time and your own (remembered on this device)
