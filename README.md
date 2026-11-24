@@ -24,9 +24,13 @@
 |---------|-------------|
 | 🌍 **Auto Timezone Detection** | Detects your timezone automatically — no manual setup |
 | 🔄 **Instant Time Conversion** | See meeting times in everyone's local time |
+| 🌍 **Show My Time** | Switch the board between the organizer's time and your own |
 | 🔥 **Real-Time Sync** | All responses sync live via Firebase — everyone sees the same board |
-| 🔗 **Short URL Sharing** | Clean `?id=xxx` links instead of long encoded URLs |
-| 👑 **Smart Best Time** | Tied scores all get 👑 — no one gets left out |
+| 🔗 **Short URL Sharing** | Clean `?id=xxx` links instead of long encoded URLs — copy the link again anytime |
+| 👑 **Smart Best Time** | Tied scores all get 👑 — no one gets left out. Head count (⭕ · 🔺) on every slot |
+| 📅 **Add to Calendar** | Save the 👑 BEST slot as an .ics file — opens in each person's own time zone, no server |
+| ☀️ **Light & Dark** | Matrix Green dark by default, light mode for everyday use |
+| ⌨️ **Keyboard & Mobile Friendly** | Answer with 1 · 2 · 3 keys on PC; big ⭕🔺✖️ buttons on phones |
 | 🎮 **Built for Gaming & Global Teams** | Perfect for Discord clans, guilds, and international meetups |
 | 🆓 **100% Free** | No hidden fees. No premium tier. Free forever. |
 | 🚫 **No Ads** | Zero ads. No tracking cookies. Only an anonymous page-view count via GoatCounter. |
@@ -39,6 +43,7 @@
 ## 🔒 Privacy
 
 - Event names, time slots and responses are stored in **Firebase Realtime Database** so that everyone with the link sees the same board.
+- The calendar file (.ics) is made in your browser — nothing is sent to a server.
 - No account, no email, no ads.
 - Only an anonymous page-view count via [GoatCounter](https://www.goatcounter.com/).
 
@@ -50,6 +55,7 @@
 - 💬 **Discord Communities** — Plan events without timezone confusion
 - 🌏 **Remote Teams** — Schedule meetings with global colleagues
 - 🍻 **Friends Abroad** — Plan online hangouts with overseas friends
+- 🏆 **Tournament Organizers** — Find a time for each match, then build the bracket with MeridiPlay
 - 👥 **Anyone** — Who's ever struggled with "What time is that in my timezone?"
 
 ---
@@ -62,12 +68,27 @@
 4. **Choose a category** (Business, Social, Gaming, Sports, or custom)
 5. **Click "Generate URL"** — a short Firebase-powered link is copied to your clipboard
 6. **Share the link** — recipients respond with ⭕🔺✖️ and see results in real-time
+7. **Add the 👑 BEST time to your calendar** with one tap
 
 That's it. No signup. No install. No hassle.
 
 ---
 
 ## 📜 Changelog
+
+### 📅 v2.0.2 — 2026-11-24
+- New: 📅 "Add to calendar" for the 👑 BEST slot — a small .ics file made on the spot (no server). Pick the length (30 min – 3 h). Opens in each person's own time zone
+- New: 🌍 "Show my time" switches the board between the organizer's time and your own (remembered on this device)
+- New: head count on each slot (⭕ 2 · 🔺 0), also on the 👑 BEST row
+- New: 🔗 copy the event link again from the board (for adding people later)
+- New: ☀️ Light mode for everyday use (top-right button, remembered; Matrix Green dark stays the default)
+- New: ⌨️ keyboard answers on PC — 1 ⭕ · 2 🔺 · 3 ✖️, ↑↓ to move
+- New: open with `?title=` and `?desc=` to pre-fill the event name and description
+- New: 🏆 "Make a tournament bracket" link under the board (MeridiPlay)
+- Changed: time slots are listed in time order (older events are re-sorted when opened)
+- Changed: 📱 bigger ⭕🔺✖️ buttons and full-width buttons on phones
+- Changed: the "link created" message now stays 3 s, with a small ☕ thank-you note
+- Fixed: names, comments and time zones are shown as plain text, so symbols like `<` `>` can't break the board
 
 ### 🔧 v2.0.1 — 2026-11-09
 - Fixed footer links (MeridiLingo / MeridiSync / Support)
@@ -105,12 +126,12 @@ MeridiMeet is part of **[Meridi Brand](https://meridibrand.com)** — indie tool
 | 📅 **MeridiMeet** | Multi-Timezone Scheduler | [Gumroad (Free)](https://meridius4.gumroad.com/l/meridimeet) / [BOOTH (Free)](https://meridistore.booth.pm/items/8814602) | [meridibrand.com/meet](https://meridibrand.com/meet) |
 | 🐾🪄 **MeridiLingo** | 760+ expressions & AI prompts — Language, Culture & AI Prompt Vocabulary | [Gumroad (Free)](https://meridius4.gumroad.com/l/meridilingo) / [BOOTH (Free)](https://meridistore.booth.pm/items/8992102) | [meridibrand.com/lingo](https://meridibrand.com/lingo) |
 | 💻 **MeridiSync** | High-speed snippet manager (Windows) | [Gumroad (&#36;8)](https://meridius4.gumroad.com/l/meridisync) / [BOOTH (¥1,000)](https://meridistore.booth.pm/items/8790105) | [Try Free](https://meridi-support.github.io/meridisync-demo/) |
-| 🌌 **MeridiStars** | Planetarium — 88 constellations, 119 locations | Free | [meridibrand.com/stars](https://meridibrand.com/stars) |
+| 🌌 **MeridiStars** | Planetarium — 88 constellations, 150 deep-sky objects, camera mode & a journey to the black hole | Free | [meridibrand.com/stars](https://meridibrand.com/stars) |
 | 🪨 **MeridiGround** | From the sky to Earth's core — rock layers, volcanoes, plate tectonics & 11 world stages | Free | [meridibrand.com/ground](https://meridibrand.com/ground) |
 | 🌊 **MeridiDepths** | Dive to the deepest ocean — 230+ sea creatures, shipwrecks & records, 11 deep places | Free | [meridibrand.com/depths](https://meridibrand.com/depths) |
 | 🎮 **MeridiPlay** | 18 browser games — casino, fortune-telling, retro candy-shop machines | Free | [meridibrand.com/play](https://meridibrand.com/play) |
 | 🧮 **MeridiConvert** | Unit converter, graph-paper drafting & handy calculators | Free | [meridibrand.com/convert](https://meridibrand.com/convert) |
-| 🧰 **Meridi Tools** | Ad-free toolbox — timer & scoreboard, text cleaner, TRPG dice, direct QR codes, photo location remover | **Free** | [meridibrand.com/tools](https://meridibrand.com/tools) |
+| 🧰 **Meridi Tools** | Ad-free toolbox — timer & scoreboard, text cleaner, TRPG dice, direct QR codes, photo location remover, bill splitter | **Free** | [meridibrand.com/tools](https://meridibrand.com/tools) |
 | 🗺️ **MeridiAtlas** | GIS for the Rest of Us | In Development | — |
 | 📔 **MeridiDiary** | Your Journey, Your Map | Planned | — |
 
